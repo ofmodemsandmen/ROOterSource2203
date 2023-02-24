@@ -1,0 +1,26 @@
+#!/bin/sh
+. /lib/functions.sh
+
+count_radio() {
+	local RADIO=$1
+	ap_list="$(ubus -S call network.wireless status | jsonfilter -e "@.$RADIO.interfaces[@.config.mode=\"ap\"].ifname")"
+	if [ -z $ap_list ]; then
+		wifi up
+		ap_list="$(ubus -S call network.wireless status | jsonfilter -e "@.$RADIO.interfaces[@.config.mode=\"ap\"].ifname")"
+	fi
+	for ap in ${ap_list}
+	do
+		iwinfo "${ap}" scan >> /tmp/cssidlist
+	done
+	let radcnt=radcnt+1
+}
+
+check_radio() {
+	radcnt=0
+	config_load wireless
+	config_foreach count_radio wifi-device
+}
+
+rm -f /tmp/cssidlist
+check_radio
+/usr/lib/easycwmp/scan_instances

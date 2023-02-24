@@ -1,0 +1,20 @@
+Source-Makefile: package/rooter-builds/ext-axt1800/Makefile
+
+Package: ext-axt1800
+Version: 1.000-1
+Depends: +libc +USE_GLIBC:librt +USE_GLIBC:libpthread +luci +ext-rooter-basic +webconsole +ext-theme +luci-theme-argon +luci-theme-argondark +ext-login +luci-theme-tomato +ext-extra +luci-app-hotspot +luci-app-guestwifi +usbmuxd +libusbmuxd-utils +libimobiledevice-utils +kmod-usb-net-ipheth +ext-splashconfig +nano +picocom +wpad
+Conflicts: 
+Menu-Depends: 
+Provides: 
+Section: utils
+Category: ROOter
+Repository: base
+Title: ROOter support w/o MWan3 for 16meg and larger routers
+Maintainer: Created by DM/makefile by Cobia@whirlpool
+Source: 
+Type: ipkg
+Description:   Helper scripts to enable ROOter w/o MWan3 on 16meg and larger routers
+Created by DM/makefile by Cobia@whirlpool
+@@
+
+

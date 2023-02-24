@@ -1,0 +1,21 @@
+Source-Makefile: package/rooter-custom-builds/Parts/build-usb/Makefile
+
+Package: build-usb
+Submenu: BuildSections
+Version: 1.000-1
+Depends: +libc +USE_GLIBC:librt +USE_GLIBC:libpthread +luci-app-ksmbd +usb-storage +ext-p910nd
+Conflicts: 
+Menu-Depends: 
+Provides: 
+Section: utils
+Category: ROOter
+Repository: base
+Title: USB packages
+Maintainer: Created by DM/makefile by Cobia@whirlpool
+Source: 
+Type: ipkg
+Description:   USB packages
+Created by DM/makefile by Cobia@whirlpool
+@@
+
+

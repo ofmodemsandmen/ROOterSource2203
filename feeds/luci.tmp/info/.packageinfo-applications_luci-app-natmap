@@ -1,0 +1,24 @@
+Source-Makefile: feeds/luci/applications/luci-app-natmap/Makefile
+Build-Depends: lua/host luci-base/host LUCI_CSSTIDY:csstidy/host LUCI_SRCDIET:luasrcdiet/host 
+
+Package: luci-app-natmap
+Submenu: 3. Applications
+Version: x
+Depends: +libc +USE_GLIBC:librt +USE_GLIBC:libpthread +natmap
+Conflicts: 
+Menu-Depends: 
+Provides: 
+Section: luci
+Category: LuCI
+Repository: base
+Title: LuCI Support for natmap
+Maintainer: OpenWrt LuCI community
+Source: 
+License: Apache-2.0
+Type: ipkg
+Description: LuCI Support for natmap
+https://github.com/openwrt/luci
+OpenWrt LuCI community
+@@
+
+

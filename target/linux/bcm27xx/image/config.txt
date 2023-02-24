@@ -1,0 +1,19 @@
+################################################################################
+# Bootloader configuration - config.txt
+################################################################################
+
+################################################################################
+# For overclocking and various other settings, see:
+# https://www.raspberrypi.org/documentation/configuration/config-txt/README.md
+################################################################################
+
+# OpenWrt config
+include distroconfig.txt
+
+[cm4]
+dtoverlay=dwc2
+
+[all]
+# Place your custom settings here.
+#Enable USB
+dr_mode=host

@@ -1,0 +1,21 @@
+Source-Makefile: package/rooter-extra/multi-wifi/Makefile
+
+Package: multi-wifi
+Submenu: Optional Applications
+Version: 1.000-1
+Depends: +libc +USE_GLIBC:librt +USE_GLIBC:libpthread 
+Conflicts: 
+Menu-Depends: 
+Provides: 
+Section: utils
+Category: ROOter
+Repository: base
+Title: support for simple wifi in Multi
+Maintainer: Created by DM/makefile by Cobia@whirlpool
+Source: 
+Type: ipkg
+Description:   Helper scripts to enable simple wifi in Multi
+Created by DM/makefile by Cobia@whirlpool
+@@
+
+

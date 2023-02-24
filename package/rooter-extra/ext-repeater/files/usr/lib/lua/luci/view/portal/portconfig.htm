@@ -1,0 +1,348 @@
+<%+header%>
+<script type="text/javascript" src="<%=resource%>/xhr.js"></script>
+<script type="text/javascript">//<![CDATA[
+
+	runbtn = "0";
+	inprocess = "0";
+	
+	function refresh()
+	{
+		document.getElementById("idf").style.visibility="visible";
+		document.getElementById("idf").style.display = "block";
+		document.getElementById("idn").style.visibility="hidden";
+		document.getElementById("idn").style.display = "none";
+		document.getElementById("settings").style.visibility="hidden";
+		document.getElementById("settings").style.display = "none";
+		document.getElementById("enable").style.visibility="hidden";
+		document.getElementById("enable").style.display = "none";
+		document.getElementById("submail").style.visibility="hidden";
+		document.getElementById("submail").style.display = "none";
+		XHR.get('<%=luci.dispatcher.build_url("admin", "portal", "getcfg")%>',
+			null,
+				function(x, rv)
+				{
+					document.getElementById("portalpassword").value=rv.portalpassword;
+					time = parseInt(rv.time);
+					time = time / 3600;
+					document.getElementById("time").value=time.toString();
+					document.getElementById("password").value = rv.password; 
+					enabled = rv.enabled; 
+					boot = rv.boot;
+					document.getElementById("boot").value = boot;
+					enmode = rv.enabled;
+					if (inprocess == "0" )
+					{
+						if ( enmode == "0" )
+						{
+							document.getElementById('runbtn').value="<%:Enable Captive Portal%>";
+							document.getElementById('runbtn').className="cbi-button cbi-button-success";
+							runbtn = "0";
+						}
+						else
+						{
+							document.getElementById('runbtn').value="<%:Disable Captive Portal%>";
+							document.getElementById('runbtn').className="cbi-button cbi-button-remove";
+							runbtn = "1";
+						}
+					}
+				}
+			);	
+	}
+	
+	function done() { 
+		document.getElementById("popup").style.display = "none";	
+		passw = document.getElementById("password").value;
+		r = document.getElementById("pass").value;
+		if ( r == null )
+		{
+			document.getElementById("pass").value="";
+			return false;
+		}
+		if ( r == passw )
+		{
+			// correct password
+			document.getElementById("pass").value="";
+			document.getElementById("idn").style.visibility="visible";
+			document.getElementById("idn").style.display = "block";
+			document.getElementById("idf").style.visibility="hidden";
+			document.getElementById("idf").style.display = "none";
+			document.getElementById("settings").style.visibility="visible";
+			document.getElementById("settings").style.display = "block";
+			document.getElementById("enable").style.visibility="visible";
+			document.getElementById("enable").style.display = "block";
+			document.getElementById("submail").style.visibility="visible";
+			document.getElementById("submail").style.display = "block";
+		}
+		else
+		{
+			alert("<%:Incorrect Password!!!%>");
+			document.getElementById("pass").value="";
+		}
+		document.getElementById("lockbtn").disabled=false;
+		document.getElementById("unlockbtn").disabled=false;
+		return false;
+	};
+	
+	function unlock(btn)
+	{
+		document.getElementById("popup").style.display = "block";
+		document.getElementById("lockbtn").disabled=true;
+		document.getElementById("unlockbtn").disabled=true;
+		document.getElementById("pass").value = "";
+		document.getElementById("pass").focus();
+		return false;
+	}
+	
+	function lock(btn)
+	{
+		refresh();
+		document.getElementById("lockbtn").disabled=false;
+		document.getElementById("unlockbtn").disabled=false;
+		document.getElementById("pass").value="";
+		return false;
+	}
+	
+	function restm(btn)
+	{
+		XHR.get('<%=luci.dispatcher.build_url("admin", "portal", "getcfg")%>',
+			null,
+				function(x, rv)
+				{
+					document.getElementById("portalpassword").value=rv.portalpassword;
+					time = parseInt(rv.time);
+					time = time / 3600;
+					document.getElementById("time").value=time.toString();
+					document.getElementById("password").value = rv.password; 
+					enabled = rv.enabled; 
+					boot = rv.boot;
+					document.getElementById("boot").value = boot;
+				}
+			);	
+	}
+	
+	function submitm(btn)
+	{
+		var ppass = document.getElementById("portalpassword").value;
+		var time = document.getElementById("time").value;
+		var boot = document.getElementById("boot").value;
+		if ( ppass.length == 0 )
+		{
+			alert("<%:You must enter an Portal Password!!%>");
+			return false;
+		}
+		if ( time.length == 0 )
+		{
+			alert("<%:You must enter a Session Time!!%>");
+			return false;
+		}
+		timei = parseInt(time);
+		timei = timei * 3600;
+		var s = ppass + "," + timei.toString() + "," + boot.toString() + ",";
+		
+		XHR.get('<%=luci.dispatcher.build_url("admin", "portal", "setcfg")%>',
+			{ set: s },
+				function()
+				{
+					alert("<%:Settings Submitted%>");
+					XHR.get('<%=luci.dispatcher.build_url("admin", "portal", "getcfg")%>',
+						null,
+							function(x, rv)
+							{
+								document.getElementById("portalpassword").value=rv.portalpassword;
+								time = parseInt(rv.time);
+								time = time / 3600;
+								document.getElementById("time").value=time.toString();
+								document.getElementById("password").value = rv.password; 
+								boot = rv.boot;
+								document.getElementById("boot").value = boot;
+							}
+						);	
+				}
+			);
+	}
+	
+	function sndcmd(event)
+	{
+		var x = event.key;
+    	if (x == "Enter")
+		{
+			document.getElementById("popbtn").focus();
+			return false;
+		}
+		return false;
+	}
+	
+	function btnenable(btn)
+	{
+		dx = "0";
+		inprocess = "1";
+		if ( runbtn == "0" )
+		{
+			dx = "1";
+			runbtn = "1";
+			document.getElementById('runbtn').value="<%:Disable Captive Portal%>";
+			document.getElementById('runbtn').className="cbi-button cbi-button-remove";
+		}
+		else
+		{
+			runbtn = "0";
+			document.getElementById('runbtn').value="<%:Enable Captive Portal%>";
+			document.getElementById('runbtn').className="cbi-button cbi-button-success";
+		}
+		document.getElementById("runbtn").disabled=true;
+		XHR.get('<%=luci.dispatcher.build_url("admin", "portal", "set_portal")%>',
+			{ set: dx },
+			function()
+			{
+				document.getElementById("runbtn").disabled=false;
+				inprocess = "0";
+				if ( dx == "1" )
+				{
+					window.open('http://8.8.8.8', '_self');
+				}
+				else
+				{
+					//window.open('http://'+window.location.hostname+'/cgi-bin/luci', '_self');
+					window.location.reload(false);
+				}
+			}
+		);
+		return false;
+	}
+					
+//]]></script>
+<form method="post" action="<%=REQUEST_URI%>">
+<div class="cbi-map" id="cbi-misc">
+<h2><a id="content" name="content"><%:Captive Portal Configuration%></a></h2>
+<div class="cbi-map-descr"><%:Settings for the Captive Portal%></div>
+<body onload="refresh();"></body>
+<head>
+     <style>
+	  #popup {
+		width:560px;
+		height:190px;
+		padding:20px;
+		background-color:gainsboro;  
+		border-style : solid;	
+		position:fixed;
+		top : 40%;
+		margin-left: auto;
+		margin-right: auto;
+		left: 0;
+		right: 0;
+		text-align: center;
+		display:none;
+	}
+    </style>
+</head>
+<fieldset id="interface_field" class="cbi-section">
+
+	<table style="visibility:hidden" width="700" border="0" id="atpass">
+	<tr>
+		<td width="10%"><div id="password" align="right"></div></td>
+	</tr>
+	</table>
+	
+	<div id="popup">
+		<table width="500" border="0">
+			<tr>
+				<td width="50px"><div><%:Enter Password to Change Portal Configuration%></div></td>
+			</tr>
+			<tr>
+				<td width="200px"><input id="pass" type="password"  onkeydown="sndcmd(event)"/></td>
+			</tr>
+			<tr>
+				<td><input type="image" id="popbtn" src="<%=resource%>/icons/lock1.png" style="width:48px;height:48px;" onclick="return done()" /></td>
+			</tr>
+		</table>
+	</div>
+	
+	<table width="465" border="0" id="idf">
+		<tr>
+			<td width="15%"></td>
+			<td width="20%"><div align="center" style="font-size:1.5em" id="netidt"><strong><%:Captive Portal Settings are Locked.%></strong></div></td>
+			<td width="5%"></td>
+			<td width="60%"></td>
+		</tr>
+		<tr>
+			<td></td>
+			<td><div align="center"><strong><%:Click button to enter password.%></strong></div></td>
+			<td><input type="image" align="center" id="lockbtn" name="lockbtn" src="<%=resource%>/icons/unlock1.png" style="width:48px;height:48px;" onclick="return unlock(this)" /></td>
+			<td></td>
+		</tr>
+	</table>
+	
+	<table width="465" border="0" id="idn" style="visibility:hidden">
+		<tr>
+			<td width="15%"></td>
+			<td width="20%"><div align="center" style="font-size:1.5em" id="netidt"><strong><%:Captive Portal Settings are Unlocked.%></strong></div></td>
+			<td width="5%"></td>
+			<td width="60%"></td>
+		</tr>
+		<tr>
+			<td></td>
+			<td><div align="center"><strong><%:Click button to lock the settings.%></strong></div></td>
+			<td><input type="image" align="center" id="unlockbtn" name="unlockbtn" src="<%=resource%>/icons/lock1.png" style="width:48px;height:48px;" onclick="return lock(this)" /></td>
+			<td></td>
+		</tr>
+	</table>
+	
+	<table width="700" border="0" id="tab11">
+	<tr>
+		<td>&nbsp;</td>
+		</tr>
+	</table>
+	
+	<table  width="900" border="0" id="enable">
+  	<tr>
+		<td width="30%">&nbsp;</td>
+		<td width="30%"><input type="button" id="runbtn" class="cbi-button cbi-button-success" value="<%:Enable Captive Portal%>" onclick="return btnenable(this)"</td>
+	</tr>
+		<tr>
+		<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>&nbsp;</td>
+			<td><div align="left" style="font-size:1.5em"><strong><%:Captive Portal Settings%></strong></div></td>
+		</tr>
+	</table>
+	
+	<table width="900" border="0" id="settings">
+		<tr>
+			<td width="30%"></td>
+			<td width="25%"><div align="right" style="font-size:1.1em"><strong><%:Portal Password%></strong></div></td>
+			<td width="45%"><input id="portalpassword" size="50"/></td>
+		</tr>
+		<tr>
+			<td></td>
+			<td><div align="right" style="font-size:1.1em"><strong><%:Access Time in Hours%></strong></div></td>
+			<td><input type="number" min="0" id="time" size="50"/></td>
+		</tr>
+		<tr>
+			<td></td>
+			<td><div align="right" style="font-size:1.1em"><strong><%:Enable Portal at Boot Up%></strong></div></td>
+			<td>
+			<select name="boot" id="boot"style="width:100px">
+			  <option value="0">No</option>
+			  <option value="1">Yes</option>
+			</select>
+			</td>
+		</tr>
+		<tr>
+			<td>&nbsp;</td>
+		</tr>
+	</table>
+	
+	<table width="550"  border="0" id="submail" style="visibility:hidden">
+		<tr>
+			<td width="30%">&nbsp;</td>
+			<td width="20%"><input type="button" id="submit" class="cbi-button cbi-button-success" value="<%:Submit Changes%>" onclick="return submitm(this)" /></td>
+			<td width="17%"><input type="button" id="reset" class="cbi-button cbi-button-remove" value="<%:Reset%>" onclick="return restm(this)" /></td>
+			<td width="33%">&nbsp;</td>
+		</tr>
+	</table>
+	
+</fieldset>
+</div>
+</form>
+<%+footer%>

@@ -1,0 +1,21 @@
+#!/bin/sh /etc/rc.common
+. /lib/functions.sh
+
+log() {
+	logger -t "WLAN State" "$@"
+}
+
+START=70
+
+start()
+{
+	cstate=$(uci -q get basic.basic.cstate)
+	log " "
+	log "$cstate"
+	log " "
+	if [ $cstate = "2" ]; then
+		uci set basic.basic.state='1'
+		uci commit basic
+	fi
+
+}

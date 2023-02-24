@@ -1,0 +1,21 @@
+Source-Makefile: package/rooter/0optionalapps/ext-rspeedtest/Makefile
+
+Package: ext-rspeedtest
+Submenu: Optional Applications
+Version: 1.000-1
+Depends: +libc +USE_GLIBC:librt +USE_GLIBC:libpthread +httping +curl +coreutils +coreutils-date +speedtestpp
+Conflicts: 
+Menu-Depends: 
+Provides: 
+Section: utils
+Category: ROOter
+Repository: base
+Title: support for ROOter SpeedTest
+Maintainer: Created by DM/makefile by Cobia@whirlpool
+Source: 
+Type: ipkg
+Description:   Helper scripts to enable ROOter SpeedTest
+Created by DM/makefile by Cobia@whirlpool
+@@
+
+

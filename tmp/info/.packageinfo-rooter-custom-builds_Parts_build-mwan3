@@ -1,0 +1,21 @@
+Source-Makefile: package/rooter-custom-builds/Parts/build-mwan3/Makefile
+
+Package: build-mwan3
+Submenu: BuildSections
+Version: 1.000-1
+Depends: +libc +USE_GLIBC:librt +USE_GLIBC:libpthread +luci-app-mwan3 +luci-app-dnsmasq-ipset
+Conflicts: 
+Menu-Depends: 
+Provides: 
+Section: utils
+Category: ROOter
+Repository: base
+Title: Load Balancing packages
+Maintainer: Created by DM/makefile by Cobia@whirlpool
+Source: 
+Type: ipkg
+Description:   Load Balancing packages
+Created by DM/makefile by Cobia@whirlpool
+@@
+
+

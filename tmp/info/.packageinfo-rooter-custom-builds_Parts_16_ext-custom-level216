@@ -1,0 +1,21 @@
+Source-Makefile: package/rooter-custom-builds/Parts_16/ext-custom-level216/Makefile
+
+Package: ext-custom-level216
+Submenu: CustomBuilds16
+Version: 1.000-1
+Depends: +libc +USE_GLIBC:librt +USE_GLIBC:libpthread +ext-custom-level2 +build-mwan3
+Conflicts: 
+Menu-Depends: 
+Provides: 
+Section: utils
+Category: ROOter
+Repository: base
+Title: Level2 Build packages with MWan3
+Maintainer: Created by DM/makefile by Cobia@whirlpool
+Source: 
+Type: ipkg
+Description:   Level2 Build packages with MWan3
+Created by DM/makefile by Cobia@whirlpool
+@@
+
+

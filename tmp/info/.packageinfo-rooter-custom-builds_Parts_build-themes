@@ -1,0 +1,21 @@
+Source-Makefile: package/rooter-custom-builds/Parts/build-themes/Makefile
+
+Package: build-themes
+Submenu: BuildSections
+Version: 1.000-1
+Depends: +libc +USE_GLIBC:librt +USE_GLIBC:libpthread +ext-theme +luci-theme-argon +luci-theme-argondark +ext-login +luci-theme-tomato
+Conflicts: 
+Menu-Depends: 
+Provides: 
+Section: utils
+Category: ROOter
+Repository: base
+Title: Themes packages
+Maintainer: Created by DM/makefile by Cobia@whirlpool
+Source: 
+Type: ipkg
+Description: Themes packages
+Created by DM/makefile by Cobia@whirlpool
+@@
+
+

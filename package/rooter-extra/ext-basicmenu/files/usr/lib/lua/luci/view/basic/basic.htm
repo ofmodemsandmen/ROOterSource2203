@@ -1,0 +1,1228 @@
+
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+	<title>Home - ROOter</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link rel="stylesheet" href="<%=media%>/cascade.css">
+	<link rel="stylesheet" href="<%=resource%>/basic/css/iconmoon_splash.css">
+	<link rel="stylesheet" href="<%=resource%>/basic/css/splash.css">
+
+	<link rel="SHORTCUT ICON" href="<%=resource%>/basic/img/favicon.gif">
+	<link rel="icon" type="image/gif" href="<%=resource%>/basic/img/favicon.gif">
+	<style>
+	body p {
+		font-size: 25px;
+		font-family: "icomoon_splash", Trebuchet MS, Arial, Helvetica, sans-serif;
+	}
+	tr {
+		vertical-align: top;
+	}
+	#popup {
+		width:100%;
+		max-width: 900px;
+		height:550px;
+		padding:20px;
+		background-color:gainsboro;  
+		border-style : solid;	
+		position:fixed;
+		top : 1%;
+		margin-left: 5px;
+		margin-right: auto;
+		left: 0;
+		right: 0;
+		text-align: center;
+		display:none;
+		overflow: scroll;
+		z-index: 300;
+	}
+	</style>
+ </head>
+
+<script src="<%=media%>/js/jquery.min.js"></script>
+<script type="text/javascript" src="<%=media%>/xhr.js"></script>
+<script type="text/javascript">//<![CDATA[
+
+var dualwifi = "0";
+var hkey;
+var show = 0;
+var henable = "0";
+
+$( document ).ready(function() {
+	var div=$('.rooterHeadBox');
+	div.hide();
+	div.css('opacity',1);
+	div.fadeIn(2000);
+	
+	function anim(item,time){
+		item.animate({
+    		marginLeft: "20px",
+    		marginRight: "20px",
+  		}, time );
+	}
+	anim($('#rooterItem1'),100);
+	anim($('#rooterItem2'),400);
+	anim($('#rooterItem3'),700);
+	anim($('#rooterItem4'),70);
+	
+	function gethotspot(data) {
+		document.getElementById("wifiname").style.color = "inherit";
+		document.getElementById("wifiencrypt").style.color = "inherit";
+		henable = data.hotspot;
+
+		if ( data.ssid == null )
+		{
+			document.getElementById("wifiname").innerHTML = "<%:No Selection%>";
+		}
+		else
+		{
+			document.getElementById("wifiname").innerHTML = data.ssid;
+		}
+		if ( document.getElementById("wifi").checked == false)
+		{
+			document.getElementById("wifistatus").innerHTML = "<%:Disabled%>";
+			document.getElementById("wifistatus").style.color = 'black';
+			document.getElementById("wstatus").style.backgroundColor = 'lightsteelblue';
+			document.getElementById("wifiname").style.color = 'black';
+			document.getElementById("wname").style.backgroundColor = 'lightsteelblue';
+			document.getElementById("wifiencrypt").style.color = 'black';
+			document.getElementById("wencrypt").style.backgroundColor = 'lightsteelblue';
+		}
+		else
+		{
+			document.getElementById("wifistatus").style.color = "inherit";
+			if ( data.state == null )
+			{
+				document.getElementById("wifistatus").innerHTML = "--";
+				document.getElementById("wstatus").style.backgroundColor = 'inherit';
+				document.getElementById("wname").style.backgroundColor = 'inherit';
+				document.getElementById("wencrypt").style.backgroundColor = 'inherit';
+			}
+			else
+			{
+				freq = "&nbsp;&nbsp;&nbsp;( 2.4 Ghz )";
+				if ( data.freq == "5" )
+				{
+					freq = "&nbsp;&nbsp;&nbsp;( 5.8 Ghz )";
+				}
+				if ( data.state == "0" )
+				{
+					document.getElementById("wifistatus").innerHTML = "<%:Disconnected%>" + freq;
+					document.getElementById("wifistatus").style.color = 'white';
+					document.getElementById("wstatus").style.backgroundColor = 'indianred';
+					document.getElementById("wifiname").style.color = 'white';
+					document.getElementById("wname").style.backgroundColor = 'indianred';
+					document.getElementById("wifiencrypt").style.color = 'white';
+					document.getElementById("wencrypt").style.backgroundColor = 'indianred';
+				}
+				if ( data.state == "1" )
+				{
+					document.getElementById("wifistatus").innerHTML = "<%:Connecting%>" + freq;
+					document.getElementById("wifistatus").style.color = 'black';
+					document.getElementById("wstatus").style.backgroundColor = 'lightcyan';
+					document.getElementById("wifiname").style.color = 'black';
+					document.getElementById("wname").style.backgroundColor = 'lightcyan';
+					document.getElementById("wifiencrypt").style.color = 'black';
+					document.getElementById("wencrypt").style.backgroundColor = 'lightcyan';
+				}
+				if ( data.state == "2" )
+				{
+					document.getElementById("wifistatus").innerHTML = "<%:Connected%>" + freq;
+					document.getElementById("wifistatus").style.color = 'black';
+					document.getElementById("wstatus").style.backgroundColor = 'lightgreen';
+					document.getElementById("wifiname").style.color = 'black';
+					document.getElementById("wname").style.backgroundColor = 'lightgreen';
+					document.getElementById("wifiencrypt").style.color = 'black';
+					document.getElementById("wencrypt").style.backgroundColor = 'lightgreen';
+				}
+			}
+		}
+		if ( data.password == null )
+		{
+			document.getElementById("wifiencrypt").innerHTML = "--";
+			document.getElementById("showbtn").disabled=true;
+		}
+		else
+		{
+			hkey = data.password;
+			lenk = hkey.length;
+			if ( show == 1 )
+			{
+				document.getElementById('wifiencrypt').innerHTML=hkey;
+			}
+			else
+			{
+				var star = "*";
+				document.getElementById('wifiencrypt').innerHTML=star.repeat(lenk);
+			}
+			document.getElementById("showbtn").disabled=false;
+		}
+		if ( document.getElementById("wifipage").style.display == "block")
+		{
+			dwifi = document.getElementById("wifi").checked;
+			if ( dwifi == false )
+			{
+				document.getElementById("wifipage3").style.display="none";
+				document.getElementById("wifipage3").style.visibility="hidden";
+				document.getElementById("wifipage4").style.display="none";
+				document.getElementById("wifipage4").style.visibility="hidden";
+			}
+			else
+			{
+				if ( henable == "0" )
+				{
+					document.getElementById("wifipage3").style.display="block";
+					document.getElementById("wifipage3").style.visibility="visible";
+					document.getElementById("wifipage4").style.display="none";
+					document.getElementById("wifipage4").style.visibility="hidden";
+				}
+				else
+				{
+					document.getElementById("wifipage3").style.display="none";
+					document.getElementById("wifipage3").style.visibility="hidden";
+					document.getElementById("wifipage4").style.display="block";
+					document.getElementById("wifipage4").style.visibility="visible";
+				}
+			}
+		}
+		else
+		{
+			document.getElementById("wifipage4").style.display="none";
+			document.getElementById("wifipage4").style.visibility="hidden";
+			document.getElementById("wifipage3").style.display="none";
+			document.getElementById("wifipage3").style.visibility="hidden";
+		}
+	}
+	
+	function doAjax() {
+		var url='/cgi-bin/luci/admin/basic/getslide' ;
+		$.ajax({
+			type: 'GET',
+			url: url,
+			data: $(this).serialize(),
+			dataType: 'json',
+			success: function (data) {
+				if ( data.wifi == "0")
+				{
+					document.getElementById("wifi").checked=false;
+					document.getElementById("scan").disabled=true;
+					document.getElementById("drop1").disabled=true;
+				}
+				else
+				{
+					document.getElementById("wifi").checked=true;
+					document.getElementById("scan").disabled=false;
+					document.getElementById("drop1").disabled=false;
+				}
+				if ( data.reconn == "0")
+				{
+					document.getElementById("wifireconn").checked=false;
+				}
+				else
+				{
+					document.getElementById("wifireconn").checked=true;
+				}
+				gethotspot(data); 
+				if ( data.modem == "0")
+				{
+					document.getElementById("modem").checked=false;
+				}
+				else
+				{
+					document.getElementById("modem").checked=true;
+				}
+				document.getElementById("openmodel").innerHTML = data.model;
+				document.getElementById("opentime").innerHTML = data.time;
+				document.getElementById("openfirm").innerHTML = data.firm;
+				document.getElementById("openip").innerHTML = "&nbsp;<%:IP Address%> - " + data.ip;
+				document.getElementById("openmac").innerHTML = "&nbsp;<%:MAC Address%> - " + data.mac;
+				dis2 = "<%:Enabled%>";
+				if ( data.disable2 == "1")
+				{
+					dis2 = "<%:Disabled%>";
+				}
+				
+				atlen = document.getElementById("drop1").options.length;
+				if (atlen <= 1 )
+				{
+					document.getElementById("drop1").options.length=0;
+				}
+				atlen = document.getElementById("drop1").options.length;
+				x = document.getElementById("drop1");
+				option = document.createElement("option");
+				option.text = "2.4 Ghz";
+				option.value = "0";
+				x.add(option);
+								
+				document.getElementById("openenb2").innerHTML = "&nbsp;<%:Status%> - " + dis2;
+				document.getElementById("openssid2").innerHTML = "&nbsp;<%:SSID%> - " + data.ssid2;
+				document.getElementById("openchan2").innerHTML = "&nbsp;<%:Channel%> - " + data.channel2;
+				if ( data.channel5 != "--" )
+				{
+					dualwifi = "1";
+					option = document.createElement("option");
+					option.text = "5.8 Ghz";
+					option.value = "1";
+					x.add(option);
+					dis5 = "<%:Enabled%>";
+					if ( data.disable5 == "1")
+					{
+						dis5 = "<%:Disabled%>";
+					}
+					document.getElementById("5Gheader").style.display="block";
+					document.getElementById("5Gheader").style.visibility="visible";
+					document.getElementById("openchan5").innerHTML = "&nbsp;<%:Channel%> - " + data.channel5;
+					document.getElementById("openssid5").innerHTML = "&nbsp;<%:SSID%> - " + data.ssid5;
+					document.getElementById("openenb5").innerHTML = "&nbsp;<%:Status%> - " + dis5;
+				}
+			}
+
+		});				
+	}
+	doAjax();
+	document.getElementById("openpage").style.display="block";
+	document.getElementById("openpage").style.visibility="visible";
+	document.getElementById("openpage2").style.display="block";
+	document.getElementById("openpage2").style.visibility="visible";
+	
+	var levels  ={};
+	levels.rscp	=[-50, -70, -90, -100, -112, -136, -140];
+	var names	={};
+	names.rscp	=['High (3G) :High (4G)', 'Medium (3G) : High (4G)', 'Poor (3G) : Good (4G)', 'Weak (3G) : Medium (4G)', 'None (3G) : Poor (4G)', 'None'];
+	
+	function SetLevel(str,key){
+		var desc=".";
+		if(key in levels){
+			var val = parseInt(str, 10);
+			if (isNaN(val)) { val = 0 ; }
+			var len = levels[key].length;
+			for (var i = 0; i < len; i++) {
+				if(val < levels[key][i]){
+					if(key in names){
+						desc=names[key][i];
+					}
+				}
+			}
+			str=desc;
+		}
+		return str;
+	}
+	
+	function clearitem(key) {
+		var name1="<b class='level_5'>";
+		var name2="</b>";
+		$("#msCell_"+key+" > span").html(name1+"--"+name2);
+	}
+	
+	function setitem(key, value) {
+		var name1="<b class='level_5'>";
+		var name2="</b>";
+		$("#msCell_"+key+" > span").html(name1+value+name2);
+	}
+	
+	function setitemTitle(key, value, title) {
+		var desc="<br><i class='msDesc'>"+title+"</i>";
+		var name1="<b class='level_5'>";
+		var name2="</b>"+desc;
+		$("#msCell_"+key+" > span").html(name1+value+name2);
+	}
+	
+	function simerror(simerr) {
+		if (simerr == "1")
+		{
+			setitem("sim", "<%:SIM is locked with no SIM Pin entered in Profile!!%>");
+		}
+		else
+		{
+			if (simerr == "2")
+			{
+				setitem("sim", "<%:Incorrect Pin to Unlock SIM%>");
+			}
+			else
+			{
+				if (simerr == "3")
+				{
+					setitem("sim", "<%:SIM is Missing%>");
+				} else
+				{
+					if (simerr == "4")
+					{
+						setitem("sim", "<%:Okay%>");
+					}
+					else
+					{
+						setitem("sim", "<%:--%>");
+					}
+				}
+			}
+		}
+	}
+	
+	function doModem() {
+		var url='/cgi-bin/luci/admin/basic/getmodem' ;
+		$.ajax({
+			type: 'GET',
+			url: url,
+			data: $(this).serialize(),
+			dataType: 'json',
+			success: function (data) {
+				document.getElementById("opentime").innerHTML = data.time;
+				if ( data.modemh == "1" )
+				{
+					document.getElementById("modem").disabled=true;
+				}
+				else
+				{
+					document.getElementById("modem").disabled=false;
+				}
+				if ( data.status == "0")
+				{
+					key = "connect";
+					value="<%:Disabled%>";
+					setitem(key, value);
+					clearitem("provider");clearitem("band");clearitem("sim");
+					clearitem("rscp");clearitem("rsrq");
+					document.getElementById("modem").disabled=false;
+				}
+				if ( data.status == "1")
+				{
+					key = "connect";
+					value="<%:No Modem Present%>";
+					setitem(key, value);
+					clearitem("provider");clearitem("band");clearitem("sim");
+					clearitem("rscp");clearitem("rsrq");
+					document.getElementById("modem").disabled=false;
+				}
+				if ( data.status == "2")
+				{
+					key = "connect";
+					value="<%:Modem Present/Not Connected%>";
+					setitem(key, value);
+					clearitem("provider");clearitem("band");simerror(data.simerr);
+					clearitem("rscp");clearitem("rsrq");
+				}
+				if ( data.status == "3")
+				{
+					key = "connect";
+					value="<%:Connected/Waiting%>";
+					setitem(key, value);
+					clearitem("provider");clearitem("band");simerror(data.simerr);
+					clearitem("rscp");clearitem("rsrq");
+				}
+				if ( data.status == "4")
+				{
+					key = "connect";
+					value="<%:Connected%>";
+					setitem(key, value);
+					setitem("provider", data.cops);
+					setitem("band", data.lband);
+					var lvl = SetLevel(data.rscp,"rscp");
+					setitemTitle("rscp", data.rscp, lvl);
+					setitemTitle("rsrq", data.ecio, "&nbsp;");
+					simerror(data.simerr);
+				}
+				
+				gethotspot(data);
+			},
+			complete: function (data) {
+				setTimeout(doModem, 100);
+			}
+
+		});				
+	}
+	setTimeout(doModem, 100);
+	
+}); 
+		
+	function status(event)
+	{
+		window.open('http://'+window.location.hostname+'/cgi-bin/luci/admin/status/overview', "_self")
+	}
+	
+	function statuspage(event)
+	{
+		document.getElementById("openpage").style.display="block";
+		document.getElementById("openpage").style.visibility="visible";
+		document.getElementById("openpage1").style.display="block";
+		document.getElementById("openpage1").style.visibility="visible";
+		document.getElementById("openpage2").style.display="block";
+		document.getElementById("openpage2").style.visibility="visible";
+		
+		document.getElementById("modempage").style.display="none";
+		document.getElementById("modempage").style.visibility="hidden";
+		document.getElementById("modempage1").style.display="none";
+		document.getElementById("modempage1").style.visibility="hidden";
+		document.getElementById("modempage2").style.display="none";
+		document.getElementById("modempage2").style.visibility="hidden";
+		document.getElementById("modemt").style.display="none";
+		document.getElementById("modemt").style.visibility="hidden";
+		
+		document.getElementById("wifipage").style.display="none";
+		document.getElementById("wifipage").style.visibility="hidden";
+		document.getElementById("wifipage1").style.display="none";
+		document.getElementById("wifipage1").style.visibility="hidden";
+		document.getElementById("wifipage2").style.display="none";
+		document.getElementById("wifipage2").style.visibility="hidden";
+		document.getElementById("wifipage3").style.display="none";
+		document.getElementById("wifipage3").style.visibility="hidden";
+		document.getElementById("wifipage4").style.display="none";
+		document.getElementById("wifipage4").style.visibility="hidden";
+		document.getElementById("wifit").style.display="none";
+		document.getElementById("wifit").style.visibility="hidden";
+	}
+	
+	function modemCheck(set) {
+		var url='/cgi-bin/luci/admin/basic/setmodem?set=' + set;
+		$.ajax({
+			type: 'GET',
+			url: url,
+			data: $(this).serialize(),
+			dataType: 'json',
+			success: function (data) {
+				
+			}
+
+		});				
+	}
+	
+	function wifiCheck(set) {
+		var url='/cgi-bin/luci/admin/basic/setwifi?set=' + set;
+		$.ajax({
+			type: 'GET',
+			url: url,
+			data: $(this).serialize(),
+			dataType: 'json',
+			success: function (data) {
+
+			}
+
+		});				
+	}
+	
+	function clkenable(btn)
+	{
+		if ( btn.checked == true )
+		{
+			set = 1;
+		}
+		else
+		{
+			set = 0;
+		}
+		if ( btn.id == "modem" )
+		{
+			modemCheck(set);
+		}
+		if ( btn.id == "wifi" )
+		{
+			if ( set == 1 )
+			{
+				document.getElementById("scan").disabled=false;
+				document.getElementById("drop1").disabled=false;
+				document.getElementById("wifipage3").style.display="block";
+				document.getElementById("wifipage3").style.visibility="visible";
+			}
+			else
+			{
+				document.getElementById("scan").disabled=true;
+				document.getElementById("drop1").disabled=true;
+				document.getElementById("wifipage3").style.display="none";
+				document.getElementById("wifipage3").style.visibility="hidden";
+				document.getElementById("wifipage4").style.display="none";
+				document.getElementById("wifipage4").style.visibility="hidden";
+			}
+			wifiCheck(set);
+		}
+	}
+	
+	function modem(btn)
+	{
+		document.getElementById("openpage").style.display="none";
+		document.getElementById("openpage").style.visibility="hidden";
+		document.getElementById("openpage1").style.display="none";
+		document.getElementById("openpage1").style.visibility="hidden";
+		document.getElementById("openpage2").style.display="none";
+		document.getElementById("openpage2").style.visibility="hidden";
+		
+		document.getElementById("modempage").style.display="block";
+		document.getElementById("modempage").style.visibility="visible";
+		document.getElementById("modempage1").style.display="block";
+		document.getElementById("modempage1").style.visibility="visible";
+		document.getElementById("modempage2").style.display="block";
+		document.getElementById("modempage2").style.visibility="visible";
+		document.getElementById("modemt").style.display="block";
+		document.getElementById("modemt").style.visibility="visible";
+		
+		document.getElementById("wifipage").style.display="none";
+		document.getElementById("wifipage").style.visibility="hidden";
+		document.getElementById("wifipage1").style.display="none";
+		document.getElementById("wifipage1").style.visibility="hidden";
+		document.getElementById("wifipage2").style.display="none";
+		document.getElementById("wifipage2").style.visibility="hidden";
+		document.getElementById("wifipage3").style.display="none";
+		document.getElementById("wifipage3").style.visibility="hidden";
+		document.getElementById("wifipage4").style.display="none";
+		document.getElementById("wifipage4").style.visibility="hidden";
+		document.getElementById("wifit").style.display="none";
+		document.getElementById("wifit").style.visibility="hidden";
+	}
+	
+	function wifi(btn)
+	{
+		document.getElementById("openpage").style.display="none";
+		document.getElementById("openpage").style.visibility="hidden";
+		document.getElementById("openpage1").style.display="none";
+		document.getElementById("openpage1").style.visibility="hidden";
+		document.getElementById("openpage2").style.display="none";
+		document.getElementById("openpage2").style.visibility="hidden";
+		
+		document.getElementById("modempage").style.display="none";
+		document.getElementById("modempage").style.visibility="hidden";
+		document.getElementById("modempage1").style.display="none";
+		document.getElementById("modempage1").style.visibility="hidden";
+		document.getElementById("modempage2").style.display="none";
+		document.getElementById("modempage2").style.visibility="hidden";
+		document.getElementById("modemt").style.display="none";
+		document.getElementById("modemt").style.visibility="hidden";
+		
+		document.getElementById("wifipage").style.display="block";
+		document.getElementById("wifipage").style.visibility="visible";
+		document.getElementById("wifipage1").style.display="block";
+		document.getElementById("wifipage1").style.visibility="visible";
+		document.getElementById("wifipage2").style.display="block";
+		document.getElementById("wifipage2").style.visibility="visible";
+		dwifi = document.getElementById("wifi").checked;
+		if ( dwifi == false )
+		{
+			document.getElementById("wifipage3").style.display="none";
+			document.getElementById("wifipage3").style.visibility="hidden";
+			document.getElementById("wifipage4").style.display="none";
+			document.getElementById("wifipage4").style.visibility="hidden";
+		}
+		else
+		{
+			if ( henable == "0" )
+			{
+				document.getElementById("wifipage3").style.display="block";
+				document.getElementById("wifipage3").style.visibility="visible";
+				document.getElementById("wifipage4").style.display="none";
+			document.getElementById("wifipage4").style.visibility="hidden";
+			}
+			else
+			{
+				document.getElementById("wifipage3").style.display="none";
+				document.getElementById("wifipage3").style.visibility="hidden";
+				document.getElementById("wifipage4").style.display="block";
+				document.getElementById("wifipage4").style.visibility="visible";
+			}
+		}
+		document.getElementById("wifit").style.display="block";
+		document.getElementById("wifit").style.visibility="visible";
+	}
+	
+	function changeradio() {
+		document.getElementById("scanlist").style.display="none";
+		document.getElementById("scanlist").style.visibility="hidden";
+	}
+	
+	function scanlist() {
+		fval = document.getElementById("drop1").value;
+		set = 2;
+		if (fval == "1" )
+		{
+			set = 5;
+		}
+		
+		document.getElementById("scan").disabled=true;
+		document.getElementById("drop1").disabled=true;
+		document.getElementById("scanlist").style.display="none";
+		document.getElementById("scanlist").style.visibility="hidden";
+		document.getElementById("loading").innerHTML = "<img src='<%=resource%>/icons/loading.gif' /> <%:Collecting data...%>";
+		
+		var url='/cgi-bin/luci/admin/basic/getlist?set=' + set;
+		$.ajax({
+			type: 'GET',
+			url: url,
+			data: $(this).serialize(),
+			dataType: 'json',
+			success: function (data) {
+				if ( data.listssid == "0" )
+				{
+					document.getElementById("scanlist").innerHTML = "<%:No Access Points Found%>";
+				}
+				else
+				{
+					document.getElementById("scanlist").innerHTML = data.listssid;
+				}
+				document.getElementById("scanlist").style.display="block";
+				document.getElementById("scanlist").style.visibility="visible";
+				document.getElementById("scan").disabled=false;
+				document.getElementById("drop1").disabled=false;
+				document.getElementById("loading").innerHTML = "<%:Available Wifi Hotspots%>";
+			}
+
+		});		
+	}
+	
+	function addlist(id) {
+		done();
+		fval = document.getElementById("drop1").value;
+		if (fval == "1" )
+		{
+			fval = 5;
+		}
+		else
+		{
+			fval = 2;
+		}
+		var arr=(id.split("|"));
+		enrc = arr[1];
+		if ( enrc == "none" )
+		{
+			pass = "none";
+		}
+		else
+		{
+			pass = document.getElementById("pass" + arr[0]).value;
+		}
+		cdata = fval + "|" + id + "|" + pass;
+		set=arr[0]+"|"+pass;
+
+		var urlk='/cgi-bin/luci/admin/basic/setkey?set=' + set;
+		$.ajax({
+			type: 'GET',
+			url: urlk,
+			data: $(this).serialize(),
+			dataType: 'json',
+			success: function (data) {
+
+			}
+
+		});	
+
+		var url='/cgi-bin/luci/admin/basic/connect?set=' + cdata;
+		$.ajax({
+			type: 'GET',
+			url: url,
+			data: $(this).serialize(),
+			dataType: 'json',
+			success: function (data) {
+				
+			}
+
+		});	
+	}
+	
+	function showkey() {
+		if ( show == 1 )
+		{
+			show = 0;
+		}
+		else
+		{
+			show = 1;
+		} 
+	}
+	
+	function autoenable(btn) {
+		if ( btn.checked == true )
+		{
+			set = 1;
+		}
+		else
+		{
+			set = 0;
+		}
+		var url='/cgi-bin/luci/admin/basic/setreconn?set=' + set;
+		$.ajax({
+			type: 'GET',
+			url: url,
+			data: $(this).serialize(),
+			dataType: 'json',
+			success: function (data) {
+
+			}
+
+		});	
+	}
+	
+	function done() { 
+		document.getElementById("popup").style.display = "none";
+	}
+	
+	function unlock(btn)
+	{
+		document.getElementById("popup").style.display = "block";
+		
+		scanlist();
+		
+	}
+	
+	function addkey(id) {
+		var arrid = id.split("|");
+		ssid = arrid[1];
+		pass = document.getElementById("pass" + arrid[1]).value;
+		set=ssid+"|"+pass;
+		var url='/cgi-bin/luci/admin/basic/setkey?set=' + set;
+		$.ajax({
+			type: 'GET',
+			url: url,
+			data: $(this).serialize(),
+			dataType: 'json',
+			success: function (data) {
+
+			}
+
+		});	
+	}
+	
+// 	document.getElementById("attxt").value="<%=resource%>";
+	
+//]]></script>
+
+
+<body id='rooterSplashHome' class='rooterSplash'>
+
+<form method="post" action="<%=REQUEST_URI%>">
+<div class="cbi-map" id="cbi-basic">
+	
+	<div id="popup">
+		<table border="0">
+			<tr>
+		<!--		<td><input type="button"  style="vertical-align:middle;font-size:24px;"  class="cbi-button cbi-button-success" value="<%:Exit Scan%>" onclick="return done()" /></td>
+		-->		<td width="250px">&nbsp;</td>
+				<td width="250px">
+					<div class="rooterItem" onclick="return done()">
+						<div class="rooterItemTitle"><i class='icon icon-power-off'></i> <%:Exit Scan%></div>
+					</div>
+				</td>
+				<td>&nbsp;</td>
+			</tr>
+			<tr>
+				<table border="0">
+					<tr>
+						<td  id="loading" style="vertical-align:middle;font-size:20px;"><img src="<%=resource%>/icons/loading.gif" /> <%:Collecting data...%></td>
+					</tr>
+				</table>
+			</tr>
+			<tr>
+				<table border="0">
+					<tr>
+						<td><div id="scanlist"></div></td>
+					</tr>
+				</table>
+			</tr>
+		</table>
+	</div>
+	
+	<table width="940" border="0">
+		<tr>
+			<td width="940">
+				<div class='rooterPageHead'>
+					<div class='rooterHeadBox'>
+					<div class='rooterLogo'></div>
+					&nbsp;
+					</div>
+				</div>
+			</td>
+			<td>&nbsp;</td>
+		</tr>
+	</table>
+</div>
+
+<table border="0">
+	<tr>
+		<td>&nbsp;</td>
+	</tr>
+</table>
+
+<table width="940" border="0" class="adminPageHead">
+	<!-- Top buttons -->
+	<tr>
+		<td width="400">
+			<div class="rooterItem" id="rooterItem4" onclick="return statuspage(this)">
+				<div class="rooterItemTitle"><i class='icon icon-home'></i> <%:Home%></div>
+			</div>
+		</td>
+		<td width="400">
+			<div class="rooterItem" id="rooterItem3" onclick="return status(this)">
+				<div class="rooterItemTitle"><i class='icon icon-cog'></i> <%:Router Settings%></div>
+			</div>
+		</td>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td>
+			<div class="rooterItem" id="rooterItem1" onclick="return modem(this)">
+				<div class="rooterItemTitle"><i class='icon icon-signal'></i> <%:Internet via Modem%></div>
+			</div>
+		</td>
+		<td>
+			<div class="rooterItem" id="rooterItem2" onclick="return wifi(this)">
+				<div class="rooterItemTitle"><i class='icon icon-wifi'></i> <%:Internet via external Wifi%></div>
+			</div>
+		</td>
+		<td>&nbsp;</td>
+	</tr>
+</table>
+<table width="1400" border="0">
+	<!-- Home page info -->
+	<tr id="openpage">
+	<!-- Home page header -->
+		<td width="900">
+			<div class='diagHeadBox'>
+				<div class='diagTagline' ><%:World Traveller Easy Basic Menu%></div>
+			</div>
+		</td>
+		<td>&nbsp;</td>
+	</tr>
+	<tr id="openpage1">
+	<!-- Home page text -->
+		<td width="800">
+			<p><%:Welcome to the %><strong> <%:World Traveller Easy Basic Menu%></strong>. <%:Here you can chose between using Internet from the modem or from the WLAN hotspot.%></p>
+			<p><%:Clicking on the%> <strong><%:Internet via Modem%></strong> <%:or %><strong> <%:Internet via external Wifi%></strong> <%:buttons will bring up the status of that Internet connection.%></p>
+		</td>
+		<td>&nbsp;</td>
+	</tr>
+	<tr id="openpage2">
+	
+	<!-- Home page info -->
+	
+		<td width="900">
+			<table width="900" border="0">
+				<!-- first line -->
+				<tr width="900">
+					<td bgcolor="#6495ED" width="290px" style="color:white;text-align:left;font-size:20px;">
+						<div><img src="<%=resource%>/basic/img/stat.jpg">    <%:Router%></div>
+					</td>
+					<td width="10px">
+						<div>&nbsp;</div>
+					</td>
+					<td bgcolor="#6495ED" width="290px" style="color:white;text-align:left;font-size:18px;">
+						<div><img src="<%=resource%>/basic/img/sys.jpg"> <%:System%></div>
+					</td>
+					<td width="10px">
+						<div>&nbsp;</div>
+					</td>
+					<td bgcolor="#6495ED" width="290px" style="color:white;text-align:left;font-size:18px;">
+						<div><img src="<%=resource%>/basic/img/lan.jpg"> <%:LAN%></div>
+					</td>
+				</tr>
+				<tr>
+				<!-- first line info -->
+					<td bgcolor="#foffff" style="color:black;text-align:center;font-size:16px;">
+						<div id="openmodel"></div>
+					</td>
+					<td>
+						<div>&nbsp;</div>
+					</td>
+					<td bgcolor="#foffff" style="color:black;text-align:center;font-size:14px;">
+						<div id="openfirm"></div>
+						<span id="opentime"></span>
+					</td>
+					<td>
+						<div>&nbsp;</div>
+					</td>
+					<td bgcolor="#foffff" style="color:black;text-align:left;font-size:14px;">
+						<div id="openip"></div>
+						<span id="openmac"></span>
+					</td>
+				</tr>
+				<tr>
+				<!-- second line -->
+					<td bgcolor="#6495ED" style="color:white;text-align:left;font-size:20px;">
+						<div><img src="<%=resource%>/basic/img/wifi.jpg">    <%:Wireless%> 2.4G</div>
+					</td>
+					<td>
+						<div>&nbsp;</div>
+					</td>
+					<td bgcolor="#6495ED" id="5Gheader" style="color:white;text-align:left;font-size:20px;visibility:hidden;display:none">
+						<div><img src="<%=resource%>/basic/img/wifi.jpg"> <%:Wireless%> 5G</div>
+					</td>
+					<td>
+						<div>&nbsp;</div>
+					</td>
+				</tr>
+				<tr>
+				<!-- second line info -->
+					<td bgcolor="#f0ffff" style="color:black;text-align:left;font-size:14px;">
+						<div id="openenb2"></div>
+						<span id="openssid2"></span>
+					</td>
+					<td>
+						<div>&nbsp;</div>
+					</td>
+					<td bgcolor="#f0ffff" style="color:black;text-align:left;font-size:14px;">
+						<div id="openenb5"></div>
+						<span id="openssid5"></span>
+					</td>
+					<td>
+						<div>&nbsp;</div>
+					</td>
+				</tr>
+				<tr>
+				<!-- second line info -->
+					<td bgcolor="#f0ffff" style="color:black;text-align:left;font-size:14px;">
+						<span id="openchan2"></span>
+					</td>
+					<td>
+						<div>&nbsp;</div>
+					</td>
+					<td bgcolor="#f0ffff" style="color:black;text-align:left;font-size:14px;">
+						<span id="openchan5"></span>
+					</td>
+					<td>
+						<div>&nbsp;</div>
+					</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+	
+	<!-- Modem Page -->
+	
+	<tr id="modempage" style="visibility:hidden;display:none">
+	<!-- Modem page header -->
+		<td>
+			<div class='diagHeadBox'>
+				<div class='diagTagline'><%:Modem Internet%></div>
+			</div>
+		</td>
+	</tr>
+	<tr id="modempage1" style="visibility:hidden;display:none">
+		<td>
+			<table width="900" border="0">
+				<tr>
+					<td  width="260" style="color:black;text-align:center;font-size:20px;">
+						<span><strong><%:Disable or Enable the Modem%></strong></span>
+					</td>
+					<td width="82">
+						<div class="blankItem" id="modemt" style="visibility:hidden;display:none">
+							<label class="switch">
+							<input type="checkbox" id="modem" onclick="clkenable(this)">
+							<span class="slider round"></span>
+							</label>
+						</div>
+					</td>
+					<td>
+						<div>&nbsp;</div>
+					</td>
+				</tr>
+			</table
+		</td>
+	</tr>
+	<tr id="modempage2" style="visibility:hidden;display:none">
+		<td>
+			<table width="900" border="0">
+			<!-- first line -->
+				<tr>
+					<td width="82">
+						<div>&nbsp;</div>
+					</td>
+					<td width="260">
+						<div class='modemStatusRow modemStatusRow1'>
+							<div class='msCell' id='msCell_connect'>
+								<div class='msTitle'><%:Connection Status%></div>
+								<span>-</span>
+							</div>
+						</div>
+					</td>
+					<td width="260">
+						<div class='modemStatusRow modemStatusRow1'>
+							<div class='msCell' id='msCell_provider'>
+								<div class='msTitle'><%:Provider%></div>
+								<span>-</span>
+							</div>
+						</div>
+					</td>
+					<td width="260">
+						<div class='modemStatusRow modemStatusRow1'>
+						<div class='msCell' id='msCell_sim'>
+							<div class='msTitle'><%:SIM Error Status%></div>
+							<span>-</span>
+							</div>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<div>&nbsp;</div>
+					</td>
+					<td>
+						<div class='modemStatusRow modemStatusRow1'>
+							<div class='msCell' id='msCell_band'>
+								<div class='msTitle'><%:Bands%></div>
+								<span>-</span>
+							</div>
+						</div>
+					</td>
+					<td>
+						<div class='modemStatusRow modemStatusRow1'>
+							<div class='msCell' id='msCell_rscp'>
+								<div class='msTitle'>RSCP (dBm) RSRP</div>
+								<span>-</span>
+							</div>
+						</div>
+					</td>
+					<td>
+						<div class='modemStatusRow modemStatusRow1'>
+							<div class='msCell' id='msCell_rsrq'>
+								<div class='msTitle'>ECIO (dB) RSRQ</div>
+								<span>-</span>
+							</div>
+						</div>
+					</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+	
+	<!-- Wifi Page -->
+	
+	<tr id="wifipage" style="visibility:hidden;display:none">
+	<!-- Modem page header -->
+		<td>
+			<div class='diagHeadBox'>
+				<div class='diagTagline'><%:Wifi Internet%></div>
+			</div>
+		</td>
+	</tr>
+	<tr id="wifipage1" style="visibility:hidden;display:none">
+		<td>
+			<table width="900" border="0">
+				<tr>
+					<td  width="260" style="color:black;text-align:center;font-size:20px;">
+						<span><strong><%:Disable or Enable Wifi Internet%></strong></span>
+					</td>
+					<td width="82">
+						<div class="blankItem" id="wifit" style="visibility:hidden;display:none">
+							<label class="switch">
+							<input type="checkbox" id="wifi" onclick="clkenable(this)">
+							<span class="slider round"></span>
+							</label>
+						</div>
+					</td>
+					<td width="82">
+						<div>&nbsp;</div>
+					</td>
+					<td width="350" style="color:black;text-align:center;font-size:20px;">
+						<div><strong><%:Allow Two Reconnection Attempts if Connection Drops%></strong></div>
+						</td>
+						<td width="82">
+							<div class="checkItem">
+								<label class="switch">
+								<input type="checkbox" id="wifireconn" onclick="autoenable(this)">
+								<span class="slider round"></span>
+								</label>
+							</div>
+						</td>
+					<td>
+						<div>&nbsp;</div>
+					</td>
+				</tr>
+			</table
+		</td>
+	</tr>
+	<tr id="wifipage2" style="visibility:hidden;display:none">
+		<td>
+			<table width="900" border="0">
+				<tr>
+					<td width="10px">
+						<div>&nbsp;</div>
+					</td>
+					<td bgcolor="#6495ED" width="270px" style="color:white;text-align:left;font-size:20px;">
+						<div><img src="<%=resource%>/basic/img/wifi.jpg">    <%:Current Hotspot%></div>
+					</td>
+					<td width="10px">
+						<div>&nbsp;</div>
+					</td>
+					<td bgcolor="#6495ED" width="270px" style="color:white;text-align:left;font-size:18px;">
+						<div><img src="<%=resource%>/basic/img/sys.jpg"> <%:Status%></div>
+					</td>
+					<td width="10px">
+						<div>&nbsp;</div>
+					</td>
+					<td bgcolor="#6495ED" width="270px" style="color:white;text-align:left;font-size:18px;">
+						<div><div><img src="<%=resource%>/basic/img/lan.jpg"> <%:Password%></div>
+					</td>
+					<td width="24px">
+						<div>&nbsp;</div>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<div>&nbsp;</div>
+					</td>
+					<td bgcolor="#f0ffff" id="wname" style="color:black;text-align:center;font-size:14px;">
+						<div id="wifiname"></div>
+					</td>
+					<td>
+						<div>&nbsp;</div>
+					</td>
+					<td bgcolor="#f0ffff" id="wstatus" style="color:black;text-align:center;font-size:14px;">
+						<div id="wifistatus"></div>
+					</td>
+					<td>
+						<div>&nbsp;</div>
+					</td>
+					<td bgcolor="#f0ffff" id="wencrypt" style="color:black;text-align:center;font-size:14px;">
+						<div id="wifiencrypt"></div>
+					</td>
+					<td>
+						<input type="button" id="showbtn" class="cbi-button cbi-button-apply" value="<%:<-->%>" onclick="return showkey()" />
+					</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+	<tr id="wifipage3" style="visibility:hidden;display:none">
+		<td>
+			<table width="900" border="0">
+				<tr>
+					<td width="10px">
+						<div>&nbsp;</div>
+					</td>
+					<td width="400px" style="color:black;text-align:center;font-size:20px;"><span>&nbsp;</span><div align="right"><strong><%:Chose Wifi Radio Frequency%>&nbsp;&nbsp;&nbsp;</strong></div></td>
+					<td width="120px">
+						<span>&nbsp;</span>
+						<select style="width:120px;font-size:20px" onchange="changeradio()" name="atdrop" id="drop1">
+						</select>
+					</td>
+					<td width="10px"><div align="right">&nbsp;</div></td>
+					
+					<td width="350px">
+						<div class="rooterItem" id="scan" onclick="return unlock(this)">
+							<div class="rooterItemTitle"><i class='icon icon-earth'></i> <%:Scan for Access Points%></div>
+						</div>
+					</td>
+				</tr>
+			</table>
+			
+	<tr id="wifipage4" style="visibility:hidden;display:none">
+		<td>
+			<table width="900" border="0">
+				<tr>
+					<td width="900px" style="color:red;text-align:left;font-size:25px;"><span>&nbsp;</span><div align="center"><strong><%:Disabled because Wifi Hotspot Manager is Active%></strong></div></td>
+					<td width="10px"><div align="right">&nbsp;</div></td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+	
+</table>
+
+<table id="cmdtxt" width="700"  border="0" style="display:table;visibility:hidden;display:none">
+  	<tr>
+    	<td width="100%">
+		<textarea readonly="readonly" name="attxt" id="attxt" rows="6" style="width: 600px;" maxlength="160"></textarea>
+		</td>
+	</tr>
+	</table>
+
+</div>
+</form>
+ </body>
+</html>
+

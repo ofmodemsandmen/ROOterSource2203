@@ -1,0 +1,12 @@
+remotename myvpn
+user "##USER##"
+password "##PASS##"
+unit 0
+nodeflate
+nobsdcomp
+noauth
+persist
+nopcomp
+noaccomp
+maxfail 5
+debug

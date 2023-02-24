@@ -1,0 +1,21 @@
+Source-Makefile: package/rooter-custom-builds/ext-custom-level4/Makefile
+
+Package: ext-custom-level4
+Submenu: CustomBuilds
+Version: 1.000-1
+Depends: +libc +USE_GLIBC:librt +USE_GLIBC:libpthread +ext-custom-basic +ext-wireguard +build-themes +bwallocate +ext-zerotier +build-usb
+Conflicts: 
+Menu-Depends: 
+Provides: 
+Section: utils
+Category: ROOter
+Repository: base
+Title: Level4 Build packages
+Maintainer: Created by DM/makefile by Cobia@whirlpool
+Source: 
+Type: ipkg
+Description:   Level4 Build packages
+Created by DM/makefile by Cobia@whirlpool
+@@
+
+

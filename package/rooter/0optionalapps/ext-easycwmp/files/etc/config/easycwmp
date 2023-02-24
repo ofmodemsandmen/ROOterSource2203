@@ -1,0 +1,25 @@
+
+config local
+	option enable '0'
+	option interface 'br-lan'
+	option port '7547'
+	option ubus_socket '/var/run/ubus.sock'
+	option date_format '%FT%T%z'
+	option authentication 'Digest'
+	option logging_level '2'
+
+config acs
+	option url 'http://192.168.1.119:7547'
+	option username ''
+	option password ''
+	option periodic_enable '1'
+	option periodic_interval '300'
+	option periodic_time '1970-01-01T14:58:12.471Z'
+
+config device
+	option product_class 'Generic'
+	option manufacturer 'ROOter'
+	option name 'John J Smith'
+
+config notifications
+

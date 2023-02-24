@@ -1,0 +1,23 @@
+Source-Makefile: feeds/packages/net/natmap/Makefile
+
+Package: natmap
+Version: 20221225-1
+Depends: +libc +USE_GLIBC:librt +USE_GLIBC:libpthread 
+Conflicts: 
+Menu-Depends: 
+Provides: 
+Section: net
+Category: Network
+Repository: base
+Title: TCP/UDP port mapping tool for full cone NAT
+Maintainer: Richard Yu <yurichard3839@gmail.com>
+Source: natmap-20221225.tar.gz
+License: MIT
+LicenseFiles: License
+Type: ipkg
+Description: TCP/UDP port mapping tool for full cone NAT
+https://github.com/heiher/natmap
+Richard Yu <yurichard3839@gmail.com>
+@@
+
+

@@ -1,0 +1,6 @@
+config portal 'portal'
+	option password '1234'
+	option portalpassword 'admin'
+	option time "7200"
+	option enabled "0"
+	option boot "0"

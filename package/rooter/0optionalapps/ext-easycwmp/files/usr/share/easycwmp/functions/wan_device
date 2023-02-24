@@ -1,0 +1,252 @@
+#!/bin/sh
+. /usr/share/libubox/jshn.sh
+# Copyright (C) 2015 PIVA Software <www.pivasoftware.com>
+# 	Author: MOHAMED Kallel <mohamed.kallel@pivasoftware.com>
+
+#############################
+#   Entry point functuons   #
+#############################
+
+prefix_list="$prefix_list $DMROOT.WANDevice."
+entry_execute_method_list="$entry_execute_method_list entry_execute_method_root_WANDevice"
+entry_execute_method_list_forcedinform="$entry_execute_method_list_forcedinform entry_execute_method_root_WANDevice"
+
+
+entry_execute_method_root_WANDevice() {
+	case "$1" in ""|"$DMROOT."|"$DMROOT.WANDevice."*)
+		common_execute_method_obj "$DMROOT.WANDevice." "0"
+		common_execute_method_obj "$DMROOT.WANDevice.1." "0"
+		common_execute_method_obj "$DMROOT.WANDevice.1.WANConnectionDevice." "0" "" "" "wan_device_browse_instances_wancxdev $1"
+		return 0
+		;;
+	esac
+	return $E_INVALID_PARAMETER_NAME;
+}
+
+sub_entry_wandevice_wanconnectiondevice() {
+	local j="$2"
+	local iface="$3"
+	case_param "$1" belongto "$DMROOT.WANDevice.1.WANConnectionDevice.$j." && {
+		common_execute_method_obj "$DMROOT.WANDevice.1.WANConnectionDevice.$j." "0"
+		common_execute_method_obj "$DMROOT.WANDevice.1.WANConnectionDevice.$j.WANIPConnection." "0"
+		common_execute_method_obj "$DMROOT.WANDevice.1.WANConnectionDevice.$j.WANIPConnection.1." "0"
+		common_execute_method_param "$DMROOT.WANDevice.1.WANConnectionDevice.$j.WANIPConnection.1.ConnectionStatus" "0" "wan_device_get_status $iface"
+		common_execute_method_param "$DMROOT.WANDevice.1.WANConnectionDevice.$j.WANIPConnection.1.ExternalIPAddress" "0" "wan_device_get_ipaddr $iface"
+		common_execute_method_param "$DMROOT.WANDevice.1.WANConnectionDevice.$j.WANIPConnection.1.MACAddress" "0" "wan_device_get_macaddr $iface"
+		common_execute_method_param "$DMROOT.WANDevice.1.WANConnectionDevice.$j.WANIPConnection.1.Name" "0" "wan_device_get_name $iface"
+		common_execute_method_param "$DMROOT.WANDevice.1.WANConnectionDevice.$j.WANIPConnection.1.UpTime" "0" "wan_device_get_uptime $iface"
+		common_execute_method_param "$DMROOT.WANDevice.1.WANConnectionDevice.$j.WANIPConnection.1.RxBytes" "0" "wan_device_get_rxbytes $iface"
+		common_execute_method_param "$DMROOT.WANDevice.1.WANConnectionDevice.$j.WANIPConnection.1.TxBytes" "0" "wan_device_get_txbytes $iface"
+		common_execute_method_param "$DMROOT.WANDevice.1.WANConnectionDevice.$j.WANIPConnection.1.Errors" "0" "wan_device_get_errors $iface"
+		return 0
+	}
+	return $E_INVALID_PARAMETER_NAME;
+}
+
+#######################################
+#     Data model browse instances     #
+#######################################
+
+wan_device_browse_instances_wancxdev() {
+	local map maps=`wan_device_get_interface_maps` 
+	for map in $maps; do
+		local iface=${map%%:*}
+		map=${map#*:}
+		local j=${map%%:*}
+		sub_entry_wandevice_wanconnectiondevice "$1" "$j" "$iface"
+	done
+	return 0;
+}
+
+#######################################
+#   Data model parameters functions   #
+#######################################
+
+wan_device_get_interface_maps() {
+	#should return a list like this: "<interface1>:<instance1>:<protocol>:<default interface? 1 : 0> <interface2>:<instance>:<protocol>:<default interface? 1 : 0>"
+	echo "wan:1:IP:1 wwan2:2:IP:0 wwan5:3:IP:0 wan1:4:IP:0 wan2:5:IP:0"
+}
+
+wan_device_get_name() {
+	local val iface="$1"
+	case $iface in
+		"wan")
+			val="Wan"
+		;;
+		"wwan2")
+			val="Hotspot2.4Ghz"
+		;;
+		"wwan5")
+			val="Hotspot5Ghz"
+		;;
+		"wan1")
+			val="Modem#1"
+		;;
+		"wan2")
+			val="Modem#2"
+		;;
+	esac
+	echo "$val"
+}
+
+# ubus -v call network.interface.wan status
+# ubus call network.device status '{ "name": "eth0" }'
+
+wan_device_get_uptime() {
+	local val iface="$1"
+	if [ $iface = "wan1" -o $iface = "wan2" ]; then
+		curr=1
+		if [ $iface = "wan2" ]; then
+			curr=2
+		fi
+		val=`uci -q get modem.modem$curr.connected`
+		if [ -z $val ]; then
+			val=0
+		fi
+	else
+
+		st=$(ubus -v call network.interface.$iface status)
+		json_init
+		json_load "$st"
+		json_get_var val up
+	fi
+	if [ "$val" = "1" ]; then
+		ifuptime=`/sbin/ifstatus "${iface}" | grep 'uptime' | grep -o '[0-9]\+'`
+		val="$(printf '%d days %02d hours %02d minutes\n' $(($ifuptime/86400)) $(($ifuptime%86400/3600)) $(($ifuptime%3600/60)))"
+		echo "${val:-nodata}"
+	else
+		echo "---"
+	fi
+}
+
+wan_device_get_status() {
+	local val iface="$1"
+	if [ $iface = "wan1" -o $iface = "wan2" ]; then
+		curr=1
+		if [ $iface = "wan2" ]; then
+			curr=2
+		fi
+		val=`uci -q get modem.modem$curr.connected`
+		if [ -z $val ]; then
+			val=0
+		fi
+	else
+
+		st=$(ubus -v call network.interface.$iface status)
+		json_init
+		json_load "$st"
+		json_get_var val up
+	fi
+	[ "$val" = "1" ] && echo Up || echo Down
+}
+
+wan_device_get_ipaddr() {
+	local val iface="$1"
+	st=$(ubus -v call network.interface.$iface status)
+	json_init
+	json_load "$st"
+	json_select ipv4-address &>/dev/null
+	ret=$?
+	if [ $ret = "0" ]; then
+		json_select 1
+		json_get_var val address
+	else
+		val="---"
+	fi
+	echo $val
+}
+
+wan_device_get_macaddr() {
+	local val iface="$1"
+	
+	st=$(ubus -v call network.interface.$iface status)
+	json_init
+	json_load "$st"
+	json_get_var iface l3_device
+	json_get_var status up
+	if [ $status = "1" ]; then
+		js="{ \"name\": \"$iface\" }"
+		st=$(ubus -v call network.device status "$js")
+		json_init
+		json_load "$st"
+		json_get_var val macaddr &>/dev/null
+		ret=$?
+		if [ $ret != "0" ]; then
+			val="---"
+		fi
+	else
+		val="---"
+	fi
+	echo $val
+}
+
+convert_bytes() {
+	local val=$1
+	sz=" B"
+	dv=1
+	if [ $val -gt 999 ]; then
+		sz=" KB"
+		dv=1000
+		if [ $val -gt 999999 ]; then
+			sz=" MB"
+			dv=1000000
+			if [ $val -gt 999999999 ]; then
+				sz=" GB"
+				dv=1000000000
+			fi
+		fi
+	fi
+	val=$((${val}/$dv))
+	echo "$val$sz"
+}
+
+device_get_stats() {
+	iface=$1
+	st=$(ubus -v call network.interface.$iface status)
+	json_init
+	json_load "$st"
+	json_get_var iface l3_device
+	json_get_var status up
+	if [ $status = "1" ]; then
+		js="{ \"name\": \"$iface\" }"
+		st=$(ubus -v call network.device status "$js")
+		json_init
+		json_load "$st"
+		json_select statistics &>/dev/null
+		json_get_var val $2
+	else
+		val="---"
+	fi
+	echo $val
+}
+
+wan_device_get_rxbytes() {
+	local val=$(device_get_stats $1 "rx_bytes")
+	if [ $val != "---" ]; then
+		val=$(convert_bytes $val)
+	fi
+	echo "$val"
+}
+
+wan_device_get_errors() {
+	local valt
+	local val=$(device_get_stats $1 "rx_errors")
+	if [ $val != "---" ]; then
+		valt=$(device_get_stats $1 "tx_errors")
+		val="$val / $valt"
+	fi
+	echo "$val"
+}
+
+wan_device_get_txbytes() {
+	local val=$(device_get_stats $1 "tx_bytes")
+	if [ $val != "---" ]; then
+		val=$(convert_bytes $val)
+	fi
+	echo "$val"
+}
+
+wan_device_get_txerrors() {
+	local val=$(device_get_stats $1 "tx_errors")
+	echo "$val"
+}

@@ -1,0 +1,206 @@
+#!/bin/sh
+. /usr/share/libubox/jshn.sh
+# Copyright (C) 2016 MOHAMED Kallel <mohamed.kallel@yahoo.fr>
+
+#common_execute_method_param "$parameter" "$permission" "$get_cmd" "$set_cmd" "xsd:$type" "$forcedinform"
+#  $forcedinform should be set to 1 if the parameter is included in the inform message otherwise empty
+#  Default of $type = string
+
+#############################
+#   Entry point functions   #
+#############################
+
+
+prefix_list="$prefix_list $DMROOT.Assoc."
+entry_execute_method_list="$entry_execute_method_list entry_execute_method_root_Assoc"
+
+entry_execute_method_root_Assoc() {
+	case "$1" in ""|"$DMROOT."|"$DMROOT.Assoc."*)
+		common_execute_method_obj "$DMROOT.Assoc." "0" "" "" "assoc_browse_instances $1"
+		return 0
+		;;
+	esac
+	return $E_INVALID_PARAMETER_NAME;
+}
+
+sub_entry_AssocList() {
+	local j="$2"
+	local alist="$3"
+	case_param "$1" belongto "$DMROOT.Assoc.$j." && {
+		common_execute_method_obj "$DMROOT.Assoc.$j." "0"
+		common_execute_method_param  "$DMROOT.Assoc.$j.IP" "0" "assoc_get_IP $alist"
+		common_execute_method_param  "$DMROOT.Assoc.$j.Host" "0" "assoc_get_Host $alist"
+		common_execute_method_param  "$DMROOT.Assoc.$j.MAC" "0" "assoc_get_Mac $alist"
+		common_execute_method_param  "$DMROOT.Assoc.$j.Signal" "0" "assoc_get_Signal $alist"
+		common_execute_method_param  "$DMROOT.Assoc.$j.Freq" "0" "assoc_get_Freq $alist"
+		return 0
+	}
+	return $E_INVALID_PARAMETER_NAME;		
+}
+
+assoc_get_max_instance() {
+	local max=`$UCI_SHOW  associate | grep "assoc_instance" | cut -d'=' -f2 | sed 's/[^0-9]*//g' | sort -nru | head -1`
+	echo ${max:-0}
+}
+
+assoc_update_instance() {
+	local host="$1"
+	local instance=`$UCI_GET $host.assoc_instance`
+	if [ -z "$instance" ]; then
+		instance=`assoc_get_max_instance`
+		$UCI_SET $host.assoc_instance=$((++instance))
+		$UCI_COMMIT
+	fi
+	echo $instance
+}
+
+assoc_create() {
+	if [ -e /etc/config/associate ]; then
+		rm -f /etc/config/associate
+	fi
+	echo "config global global" > /etc/config/associate
+	echo " " >> /etc/config/associate
+
+	cntr=0
+
+	for interface in `iwinfo | grep ESSID | cut -f 1 -s -d" "`
+	do
+		# for each interface, get mac addresses of connected stations/clients
+		alist=$(iwinfo $interface assoclist)
+		maclist=`echo "$alist" | grep dBm | cut -f 1 -s -d"m" | tr " " "!"`
+		for mac in $maclist
+		do
+		  macaddr=$(echo "$mac" | cut -d"!" -f1)
+		  signal=$(echo $mac | cut -d"!" -f3)
+			ip=`cat /tmp/dhcp.leases | cut -f 2,3,4 -s -d" " | grep -i $macaddr | cut -f 2 -s -d" "`
+			host=`cat /tmp/dhcp.leases | cut -f 2,3,4 -s -d" " | grep -i $macaddr | cut -f 3 -s -d" "`
+			
+			for USERSFILE in /tmp/dhcp.leases /tmp/dnsmasq.conf /etc/dnsmasq.conf /etc/hosts; do
+				[ -e "$USERSFILE" ] || continue
+				case $USERSFILE in
+						/tmp/dhcp.leases )
+						host=$(grep -i "$macaddr" $USERSFILE | cut -f4 -s -d' ')
+					;;
+						/etc/hosts )
+						host=$(grep "^$ip " $USERSFILE | cut -f2 -s -d' ')
+					;;
+						* )
+						host=$(grep -i "$macaddr" "$USERSFILE" | cut -f2 -s -d,)
+					;;
+				esac
+				[ "$host" = "*" ] && host=""
+				[ -n "$host" ] && break
+			done
+				
+			[ -z "$ip" ] && ip="---"
+			if [ -z "$host" ]; then
+				host="---"
+				local iwf=$(iwinfo $interface info)
+				local client=$(echo "$iwf" | grep "Mode: Client")
+				if [ ! -z "$client" ]; then
+					host="Hotspot"
+					essid=$(echo "$iwf" | grep "ESSID:" | tr ' ' ',')
+					sid=$(echo $essid | cut -d, -f7)
+					temp="${sid%\"}"
+					sid="${temp#\"}"
+					st=$(ubus -v call network.interface.wwan status)
+					json_init
+					json_load "$st"
+					json_select ipv4-address &>/dev/null
+					ret=$?
+					if [ $ret = "0" ]; then
+						json_select 1
+						json_get_var val address
+					fi
+					ip="$val"
+					host="$host ( $sid )"
+				fi
+			fi
+			if [ $signal -ge -50 ]; then
+				signal=$signal" dBm (maximum)"
+			else
+				if [ $signal -ge -60 ]; then
+					signal=$signal" dBm (excellent)"
+				else
+					if [ $signal -ge -67 ]; then
+						signal=$signal" dBm (good)"
+					else
+						if [ $signal -ge -70 ]; then
+							signal=$signal" dBm (fair)"
+						else
+							if [ $signal -ge -80 ]; then
+								signal=$signal" dBm (poor)"
+							else
+								signal=$signal" dBm (bad)"
+							fi
+						fi
+					fi
+				fi
+			fi
+			acc=$(uci -q get associate.assoc$cntr)
+			if [ -z $acc ]; then
+				uci set associate.assoc$cntr=assoc
+			fi
+			fr=$(iwinfo $interface info | grep "Mode:")
+			fr=$(echo "${fr}" | sed -e 's/^[ \t]*//')
+			fr=$(echo "$fr" | tr ' ' ',' | cut -d, -f6)
+			fr=${fr:1}" Ghz"
+			uci set associate.assoc$cntr.freq="$fr"
+			uci set associate.assoc$cntr.ip="$ip"
+			uci set associate.assoc$cntr.host="$host"
+			uci set associate.assoc$cntr.macaddr=$macaddr
+			uci set associate.assoc$cntr.signal="$signal"
+			uci commit associate
+			cntr=$((++cntr))
+		done
+	done
+	if [ $cntr -gt 0 ]; then
+		while [ true ]; do
+			acc=$(uci -q get associate.assoc$cntr)
+			if [ -z $acc ]; then
+				break
+			fi
+			uci delete associate.assoc$cntr
+			uci commit associate
+			cntr=$((++cntr))
+		done
+	fi
+}
+
+assoc_browse_instances() {
+	local j=$2
+	assoc_create
+	local assoc assocs=`$UCI_SHOW  associate | grep "associate\..*=assoc" | cut -d "=" -f 1`
+	for assoc in $assocs; do
+		local j=`assoc_update_instance $assoc`
+		sub_entry_AssocList  "$1" "$j" "$assoc"
+	done
+}
+
+assoc_get_IP() {
+	local ip=`$UCI_GET $1.ip`
+	if [ -z "$ip" ]; then
+		ip="---"
+	fi
+	echo "$ip"
+}
+
+assoc_get_Host() {
+	local host=`$UCI_GET $1.host`
+	echo "$host"
+}
+
+assoc_get_Mac() {
+	local macaddr=`$UCI_GET $1.macaddr`
+	echo "$macaddr"
+}
+
+assoc_get_Signal() {
+	local signal=`$UCI_GET $1.signal`
+	echo "$signal"
+}
+
+assoc_get_Freq() {
+	local freq=`$UCI_GET $1.freq`
+	echo "$freq"
+}

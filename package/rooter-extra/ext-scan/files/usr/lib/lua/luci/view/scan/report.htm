@@ -1,0 +1,284 @@
+<%+header%>
+
+<script type="text/javascript" src="<%=resource%>/xhr.js"></script>
+<script type="text/javascript">//<![CDATA[
+var banddata = new Array() ;
+var idata = new Array() ;
+var numbands;
+var running;
+var stopping = "0";
+
+var str1 = '<table width="800"  border="0"><tr><td width="20px">&nbsp;</td><td width="90px"><div align="left" style="font-size : 20px; width: 100%; height: 35px;border-style:double;">&nbsp;&nbsp;Band : B';
+var str2 = '</div></td><td width="100px">&nbsp;</td><td width="100px">&nbsp;</td><td width="100px">&nbsp;</td><td width="100px">&nbsp;</td><td width="100px">&nbsp;</td><td width="190px">&nbsp;</td></tr><tr><td>&nbsp;</td><td>&nbsp;</td><td><div align="left" style="font-size : 20px; width: 100%; height: 35px;border-style:double;">&nbsp;&nbsp;CSQ : ';
+var str3 = '</div></td><td><div align="left" style="font-size : 20px; width: 100%; height: 35px;border-style:double;">&nbsp;&nbsp;Signal : ';
+var str4 = '</div></td><td><div align="left" style="font-size : 20px; width: 100%; height: 35px;border-style:double;">&nbsp;&nbsp;RSSI : ';
+var str5 = '</div></td><td><div align="left" style="font-size : 20px; width: 100%; height: 35px;border-style:double;">&nbsp;&nbsp;RSRQ : ';
+var str6 = ' dB</div></td><td><div align="left" style="font-size : 20px; width: 100%; height: 35px;border-style:double;">&nbsp;&nbsp;SINR : ';
+var str7 = '</div></td></tr></table>';
+var str8 = '<table width="800"  border="0"><tr><td width="20px">&nbsp;</td><td width="90px">&nbsp;</td><td width="250px"><div align="left" style="font-size : 20px; width: 100%; height: 35px;border-style:double;">&nbsp;&nbsp;Tower ID : ';
+var str9 = '</div></td><td width="250px"><div align="left" style="font-size : 20px; width: 100%; height: 35px;border-style:double;">&nbsp;&nbsp;Bandwidth : ';
+var str10 = '</div></td><td width="190px">&nbsp;</td></tr><tr><td>&nbsp;</td><td>&nbsp;</td><td><div align="left" style="font-size : 20px; width: 100%; height: 35px;border-style:double;">&nbsp;&nbsp;Download Speed : ';
+var str11 = ' Mbps</div></td><td><div align="left" style="font-size : 20px; width: 100%; height: 35px;border-style:double;">&nbsp;&nbsp;Upload Speed : ';
+var str12 = ' Mbps</div></td></tr></table>';
+
+var btncolor = "#ff7901";
+var btncolor1 = "#0078d0"
+var btncolor2 = "#ffdb01";
+
+	function getdata(rv) {
+		running = rv.running;
+		stopping = rv.stopping;
+		if ( running == "1" )
+		{
+			if ( stopping == "0" )
+			{
+				document.getElementById('runbtn').style.background=btncolor;
+				document.getElementById('runbtn').innerHTML="<%:Stop Scan%>";
+			}
+			else
+			{
+				document.getElementById('runbtn').innerHTML="<%:Stopping Scan%>";
+				document.getElementById('runbtn').style.background=btncolor2;
+			}
+		}
+		else
+		{
+			document.getElementById("runbtn").disabled=false;
+			document.getElementById('runbtn').innerHTML="<%:Manually Scan Once%>";
+			document.getElementById('runbtn').style.background=btncolor1;
+		}
+		numbands = rv.numbands;
+		
+		if ( numbands == 0 ) 
+		{
+			document.getElementById("noscan").style.display="block";
+			document.getElementById("noscan").style.visibility="visible";
+			document.getElementById("line1").style.display="none";
+			document.getElementById("line1").style.visibility="hidden";
+			document.getElementById("line2").style.display="none";
+			document.getElementById("line2").style.visibility="hidden";
+			document.getElementById("line3").style.display="none";
+			document.getElementById("line3").style.visibility="hidden";
+			document.getElementById("bandlist").innerHTML = "";
+		}
+		else
+		{
+			document.getElementById("noscan").style.display="none";
+			document.getElementById("noscan").style.visibility="hidden";
+			document.getElementById("line1").style.display="block";
+			document.getElementById("line1").style.visibility="visible";
+			document.getElementById("line2").style.display="block";
+			document.getElementById("line2").style.visibility="visible";
+			document.getElementById("line3").style.display="block";
+			document.getElementById("line3").style.visibility="visible"; 
+			
+			imei = rv.imei;
+			routerid = rv.routerid;
+			isp = rv.isp;
+			starttime = rv.starttime;
+			endtime = rv.endtime;
+			
+			document.getElementById("start").innerHTML = "&nbsp;&nbsp;<%:Scan Start Time%>&nbsp;&nbsp;:&nbsp;&nbsp;" + starttime;
+			document.getElementById("end").innerHTML = "&nbsp;&nbsp;<%:Scan End Time%>&nbsp;&nbsp;:&nbsp;&nbsp;" + endtime;
+			document.getElementById("isp").innerHTML = "&nbsp;&nbsp;<%:Provider%>&nbsp;&nbsp;:&nbsp;&nbsp;" + isp;
+			document.getElementById("imei").innerHTML = "&nbsp;&nbsp;<%:Modem IMEI%>&nbsp;&nbsp;:&nbsp;&nbsp;" + imei;
+			document.getElementById("routerid").innerHTML = "&nbsp;&nbsp;<%:Router ID%>&nbsp;&nbsp;:&nbsp;&nbsp;" + routerid;
+		
+			banddata = rv.bands;
+			line3 = "";
+			for (var i = 0; i < numbands; i++) {
+				idata = banddata[i].split("!");
+				line1 = str1 + idata[0] + str2 + idata[1] + str3 + idata[2] + str4 + idata[3] + str5 + idata[4] + str6 + idata[5] + str7;
+				
+				line2 = str8 + idata[6] + str9 + idata[7] + str10 + idata[8] + str11 + idata[9] + str12;
+				line3 = line3 + line1 + line2;
+				
+			}
+			document.getElementById("bandlist").innerHTML = line3;
+		}
+	}
+
+	XHR.get('<%=luci.dispatcher.build_url("admin", "modem", "getreportdata")%>',
+		null,
+		function(x, rv)
+		{
+			getdata(rv);
+		}
+	); 
+	
+	XHR.poll(10, '<%=luci.dispatcher.build_url("admin", "modem", "getreportdata")%>', null,
+		function(x, rv)
+		{
+			getdata(rv);
+		}
+	);
+	
+	function btnrun(btn) {
+		if ( running == "0" )
+		{
+			stopping = "0";
+			document.getElementById('runbtn').innerHTML="<%:Stop Scan%>";
+			document.getElementById('runbtn').style.background=btncolor;
+			document.getElementById("noscan").style.display="block";
+			document.getElementById("noscan").style.visibility="visible";
+			document.getElementById("line1").style.display="none";
+			document.getElementById("line1").style.visibility="hidden";
+			document.getElementById("line2").style.display="none";
+			document.getElementById("line2").style.visibility="hidden";
+			document.getElementById("line3").style.display="none";
+			document.getElementById("line3").style.visibility="hidden";
+			document.getElementById("bandlist").innerHTML = "";
+			XHR.get('<%=luci.dispatcher.build_url("admin", "modem", "running")%>',null,
+				function()
+				{
+					
+				}
+			);
+		}
+		else
+		{
+			stopping = "1";
+			document.getElementById("runbtn").disabled=true;
+			document.getElementById('runbtn').innerHTML="<%:Stopping Scan%>";
+			document.getElementById('runbtn').style.background=btncolor2;
+			XHR.get('<%=luci.dispatcher.build_url("admin", "modem", "stopscan")%>',null,
+				function()
+				{
+					
+				}
+			);
+		}
+	}
+	
+				//document.getElementById("attxt").value=starttime;
+	
+//]]></script>
+
+<form method="post" action="<%=REQUEST_URI%>">
+<div class="cbi-map" id="cbi-misc">
+<h2><a id="content" name="content"><%:Band Scan Report%></a></h2>
+<div class="cbi-map-descr"><%:Report for Band Scan Test%></div>
+<head>
+	<link rel="stylesheet" href="<%=resource%>/buttons/buttons.css">
+	<style>
+
+	</style>
+
+</head>
+
+<table width="550"  border="0">
+	<tr>
+		<td width="10%">&nbsp;</td>
+		<td width="10%">&nbsp;</td>
+		<td width="10%">&nbsp;</td>
+		<td width="10%">&nbsp;</td>
+		<td width="60%">&nbsp;</td>
+	</tr>
+  	<tr>
+		<td>&nbsp;</td>
+		<td>
+			<div style="width: 400px;color:white;" id="runbtn" class="button-71" role="button" onclick="return btnrun(this)">&nbsp;
+			</div>
+		</td>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+	</tr>
+</table>
+
+<table width="800"  border="0">
+	<tr>
+		<td width="20px">&nbsp;</td>
+		<td width="550px"><div align="left" style="font-size : 20px; width: 550px; height: 35px;border-style:double;visibility:hidden;display:none" id="noscan" ><strong>&nbsp;&nbsp;<%:No Scan Report Available%></strong></div></td>
+		<td width="530px">&nbsp;</td>
+	</tr>
+</table>
+
+<table width="800"  border="0" id="line1">
+	<tr>
+		<td width="20px">&nbsp;</td>
+		<td width="550px"><div align="left" style="font-size : 20px; width: 550px; height: 35px;border-style:double;" id="start" ><strong></strong></div></td>
+		<td width="20px">&nbsp;</td>
+		<td width="550px"><div align="left" style="font-size : 20px; width: 550px; height: 35px;border-style:double;" id="end" ><strong></strong></div></td>
+		<td width="160px">&nbsp;</td>
+	</tr>
+</table>
+
+<table width="800"  border="0" id="line2">
+	<tr>
+		<td width="20px">&nbsp;</td>
+		<td width="300px"><div align="left" style="font-size : 20px; width: 300px; height: 35px;border-style:double;" id="isp" ><strong></strong></div></td>
+		<td width="20px">&nbsp;</td>
+		<td width="400px"><div align="left" style="font-size : 20px; width: 400px; height: 35px;border-style:double;" id="imei" ><strong></strong></div></td>
+		<td width="20px">&nbsp;</td>
+		<td width="350px"><div align="left" style="font-size : 20px; width: 350px; height: 35px;border-style:double;" id="routerid" ><strong></strong></div></td>
+		<td width="215px">&nbsp;</td>
+	</tr>
+	<tr>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+	</tr>
+</table>
+
+<table  id="line3">
+	<tr>
+		<table border="0">
+			<tr>
+				<td><div id="bandlist"></div></td>
+			</tr>
+		</table>
+	</tr>
+</table>
+<!--
+<table width="800"  border="0" id="line3">
+	<tr>
+		<td width="20px">&nbsp;</td>
+		<td width="90px"><div align="left" style="font-size : 20px; width: 100%; height: 35px;border-style:double;">&nbsp;&nbsp;Band : B2</div></td>
+		<td width="100px">&nbsp;</td>
+		<td width="100px">&nbsp;</td>
+		<td width="100px">&nbsp;</td>
+		<td width="100px">&nbsp;</td>
+		<td width="100px">&nbsp;</td>
+		<td width="190px">&nbsp;</td>
+	</tr>
+	<tr>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+		<td><div align="left" style="font-size : 20px; width: 100%; height: 35px;border-style:double;">&nbsp;&nbsp;CSQ : 18</div></td>
+		<td><div align="left" style="font-size : 20px; width: 100%; height: 35px;border-style:double;">&nbsp;&nbsp;Signal : 58%</div></td>
+		<td><div align="left" style="font-size : 20px; width: 100%; height: 35px;border-style:double;">&nbsp;&nbsp;RSSI : -80 dBm</div></td>
+		<td><div align="left" style="font-size : 20px; width: 100%; height: 35px;border-style:double;">&nbsp;&nbsp;RSRQ : -11 dB</div></td>
+		<td><div align="left" style="font-size : 20px; width: 100%; height: 35px;border-style:double;">&nbsp;&nbsp;SINR : 10 dB</div></td>
+	</tr
+</table>
+<table width="800"  border="0" id="line4">
+	<tr>
+		<td width="20px">&nbsp;</td>
+		<td width="90px">&nbsp;</td>
+		<td width="250px"><div align="left" style="font-size : 20px; width: 100%; height: 35px;border-style:double;">&nbsp;&nbsp;Tower ID : 110953</div></td>
+		<td width="250px"><div align="left" style="font-size : 20px; width: 100%; height: 35px;border-style:double;">&nbsp;&nbsp;Bandwidth : 20 MHz Down | 20 MHz Up</div></td>
+		<td width="190px">&nbsp;</td>
+	</tr>
+	<tr>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+		<td><div align="left" style="font-size : 20px; width: 100%; height: 35px;border-style:double;">&nbsp;&nbsp;Download Speed : 12.88 Mpbs</div></td>
+		<td><div align="left" style="font-size : 20px; width: 100%; height: 35px;border-style:double;">&nbsp;&nbsp;Upload Speed : 8.62 Mpbs</div></td>
+	</tr>
+</table>
+-->
+<table id="cmdtxt" width="700"  border="0" style="display:table;visibility:hidden;display:none">
+  	<tr>
+    		<td width="100%">
+		<textarea readonly="readonly" name="attxt" id="attxt" rows="6" style="width: 600px;" maxlength="160"></textarea>
+		</td>
+	</tr>
+</table>
+
+</div>
+</form>
+<%+footer%>

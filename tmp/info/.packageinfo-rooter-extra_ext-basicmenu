@@ -1,0 +1,21 @@
+Source-Makefile: package/rooter-extra/ext-basicmenu/Makefile
+
+Package: ext-basicmenu
+Submenu: Optional Applications
+Version: 1.000-1
+Depends: +libc +USE_GLIBC:librt +USE_GLIBC:libpthread 
+Conflicts: 
+Menu-Depends: 
+Provides: 
+Section: utils
+Category: ROOter
+Repository: base
+Title: support for Easy Basic menu
+Maintainer: Created by DM/makefile by Cobia@whirlpool
+Source: 
+Type: ipkg
+Description:   Helper scripts to add Easy Basic menu
+Created by DM/makefile by Cobia@whirlpool
+@@
+
+

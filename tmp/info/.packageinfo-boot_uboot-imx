@@ -1,0 +1,68 @@
+Source-Makefile: package/boot/uboot-imx/Makefile
+
+Package: u-boot-apalis_imx6
+Default: y if (TARGET_imx_cortexa9_Default || TARGET_imx_cortexa9_DEVICE_toradex_apalis || TARGET_DEVICE_imx_cortexa9_DEVICE_toradex_apalis)
+Version: 2020.04-0
+Depends: +libc +USE_GLIBC:librt +USE_GLIBC:libpthread @!IN_SDK @TARGET_imx_cortexa9
+Conflicts: 
+Menu-Depends: 
+Provides: 
+Build-Variant: apalis_imx6
+Section: boot
+Category: Boot Loaders
+Title: U-Boot for Toradex Apalis
+Maintainer: 
+Source: u-boot-2020.04.tar.bz2
+License: GPL-2.0 GPL-2.0+
+LicenseFiles: Licenses/README
+Type: bin
+Description: U-Boot for Toradex Apalis
+http://www.denx.de/wiki/U-Boot
+
+@@
+
+
+Package: u-boot-mx6cuboxi
+Default: y if (TARGET_imx_cortexa9_Default || TARGET_imx_cortexa9_DEVICE_solidrun_cubox-i || TARGET_DEVICE_imx_cortexa9_DEVICE_solidrun_cubox-i)
+Version: 2020.04-0
+Depends: +libc +USE_GLIBC:librt +USE_GLIBC:libpthread @!IN_SDK @TARGET_imx_cortexa9
+Conflicts: 
+Menu-Depends: 
+Provides: 
+Build-Variant: mx6cuboxi
+Section: boot
+Category: Boot Loaders
+Title: U-Boot for SolidRun Cubox-i boards
+Maintainer: 
+Source: u-boot-2020.04.tar.bz2
+License: GPL-2.0 GPL-2.0+
+LicenseFiles: Licenses/README
+Type: bin
+Description: U-Boot for SolidRun Cubox-i boards
+http://www.denx.de/wiki/U-Boot
+
+@@
+
+
+Package: u-boot-wandboard
+Default: y if (TARGET_imx_cortexa9_Default || TARGET_imx_cortexa9_DEVICE_wandboard_dual || TARGET_DEVICE_imx_cortexa9_DEVICE_wandboard_dual)
+Version: 2020.04-0
+Depends: +libc +USE_GLIBC:librt +USE_GLIBC:libpthread @!IN_SDK @TARGET_imx_cortexa9
+Conflicts: 
+Menu-Depends: 
+Provides: 
+Build-Variant: wandboard
+Section: boot
+Category: Boot Loaders
+Title: U-Boot for Wandboard Dual Lite/Quad/Solo
+Maintainer: 
+Source: u-boot-2020.04.tar.bz2
+License: GPL-2.0 GPL-2.0+
+LicenseFiles: Licenses/README
+Type: bin
+Description: U-Boot for Wandboard Dual Lite/Quad/Solo
+http://www.denx.de/wiki/U-Boot
+
+@@
+
+

@@ -1,0 +1,11 @@
+#!/bin/sh /etc/rc.common
+
+START=99
+
+boot() {
+       case "$(board_name)" in
+       netgear,wax610)
+                       fw_setenv boot_count 0
+               ;;
+       esac
+}

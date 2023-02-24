@@ -1,0 +1,41 @@
+Source-Makefile: package/boot/arm-trusted-firmware-sunxi/Makefile
+
+Package: arm-trusted-firmware-sunxi-a64
+Version: 2020-11-17-e2c509a39c6cc4dda8734e6509cdbe6e3603cdfc-1
+Depends: +libc +USE_GLIBC:librt +USE_GLIBC:libpthread @TARGET_sunxi_cortexa53
+Conflicts: 
+Menu-Depends: 
+Provides: 
+Build-Variant: sun50i_a64
+Section: boot
+Category: Boot Loaders
+Title: ARM Trusted Firmware for Allwinner
+Maintainer: Hauke Mehrtens <hauke@hauke-m.de>
+Source: arm-trusted-firmware-sunxi-2020-11-17-e2c509a39c6cc4dda8734e6509cdbe6e3603cdfc.tar.xz
+License: BSD-3-Clause
+LicenseFiles: docs/license.rst
+Type: bin
+Description: ARM Trusted Firmware for Allwinner
+Hauke Mehrtens <hauke@hauke-m.de>
+@@
+
+Package: arm-trusted-firmware-sunxi-h6
+Version: 2020-11-17-e2c509a39c6cc4dda8734e6509cdbe6e3603cdfc-1
+Depends: +libc +USE_GLIBC:librt +USE_GLIBC:libpthread @TARGET_sunxi_cortexa53
+Conflicts: 
+Menu-Depends: 
+Provides: 
+Build-Variant: sun50i_h6
+Section: boot
+Category: Boot Loaders
+Title: ARM Trusted Firmware for Allwinner
+Maintainer: Hauke Mehrtens <hauke@hauke-m.de>
+Source: arm-trusted-firmware-sunxi-2020-11-17-e2c509a39c6cc4dda8734e6509cdbe6e3603cdfc.tar.xz
+License: BSD-3-Clause
+LicenseFiles: docs/license.rst
+Type: bin
+Description: ARM Trusted Firmware for Allwinner
+Hauke Mehrtens <hauke@hauke-m.de>
+@@
+
+

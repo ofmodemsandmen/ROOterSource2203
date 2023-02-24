@@ -1,0 +1,93 @@
+#!/bin/sh
+. /usr/share/libubox/jshn.sh
+# Copyright (C) 2016 MOHAMED Kallel <mohamed.kallel@yahoo.fr>
+
+#common_execute_method_param "$parameter" "$permission" "$get_cmd" "$set_cmd" "xsd:$type" "$forcedinform"
+#  $forcedinform should be set to 1 if the parameter is included in the inform message otherwise empty
+#  Default of $type = string
+
+log() {
+	modlog "TRS069 " "$@"
+}
+
+#############################
+#   Entry point functions   #
+#############################
+
+
+prefix_list="$prefix_list $DMROOT.Scan."
+entry_execute_method_list="$entry_execute_method_list entry_execute_method_root_Scan"
+
+entry_execute_method_root_Scan() {
+	case "$1" in ""|"$DMROOT."|"$DMROOT.Scan."*)
+		common_execute_method_obj "$DMROOT.Scan." "0" "" "" "scan_stations_browse_instances $1"
+		return 0
+		;;
+	esac
+	return $E_INVALID_PARAMETER_NAME;
+}
+
+sub_entry_ScanList() {
+	local j="$2"
+	local alist="$3"
+	case_param "$1" belongto "$DMROOT.Scan.$j." && {
+		common_execute_method_obj "$DMROOT.Scan.$j." "0"
+		common_execute_method_param  "$DMROOT.Scan.$j.Name" "0" "scan_get_name $alist"
+		common_execute_method_param  "$DMROOT.Scan.$j.Channel" "0" "scan_get_channel $alist"
+		common_execute_method_param  "$DMROOT.Scan.$j.Signal" "0" "scan_get_signal $alist"
+		common_execute_method_param  "$DMROOT.Scan.$j.Ekey" "0" "scan_get_ekey $alist"
+		return 0
+	}
+	return $E_INVALID_PARAMETER_NAME;		
+}
+
+
+scan_get_max_instance() {
+	local max=`$UCI_SHOW  scan | grep "scan_instance" | cut -d'=' -f2 | sed 's/[^0-9]*//g' | sort -nru | head -1`
+	echo ${max:-0}
+}
+
+scan_update_instance() {
+	local host="$1"
+	local instance=`$UCI_GET $host.scan_instance`
+	if [ -z "$instance" ]; then
+		instance=`scan_get_max_instance`
+		$UCI_SET $host.scan_instance=$((++instance))
+		$UCI_COMMIT
+	fi
+	echo $instance
+}
+
+scan_stations_browse_instances() {
+	local j=$2
+	if [ "$1" = "Device.Scan." ]; then
+		echo "config global global" > /etc/config/scan
+		echo " " >> /etc/config/scan
+		/usr/lib/easycwmp/get_ssid
+	fi
+	local scan scans=`$UCI_SHOW  scan | grep "scan\..*=scann" | cut -d "=" -f 1`
+	for scan in $scans; do
+		local j=`scan_update_instance $scan`
+		sub_entry_ScanList  "$1" "$j" "$scan"
+	done
+}
+
+scan_get_name() {
+	local name=`$UCI_GET $1.essid`
+	echo "$name"
+}
+
+scan_get_channel() {
+	local name=`$UCI_GET $1.channel`
+	echo "$name"
+}
+
+scan_get_signal() {
+	local name=`$UCI_GET $1.quality`
+	echo "$name"
+}
+
+scan_get_ekey() {
+	local name=`$UCI_GET $1.ekey`
+	echo "$name"
+}

@@ -1,0 +1,14 @@
+#!/bin/sh
+
+log() {
+	logger -t "L2TP IFACE" "$@"
+}
+
+if [ "$INTERFACE" = "L2TPVPN" ]; then
+	log "$ACTION $INTERFACE"
+fi
+
+if [ "$ACTION" = "ifup" -a "$INTERFACE" = "L2TPVPN" ]; then
+	#ip ro add default dev l2tp-L2TPVPN proto static scope link
+	route add default dev l2tp-L2TPVPN
+fi

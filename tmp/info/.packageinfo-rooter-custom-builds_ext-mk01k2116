@@ -1,0 +1,20 @@
+Source-Makefile: package/rooter-custom-builds/ext-mk01k2116/Makefile
+
+Package: ext-mk01k2116
+Version: 1.000-1
+Depends: +libc +USE_GLIBC:librt +USE_GLIBC:libpthread +ext-mk01k21 +luci-app-mwan3 +luci-app-dnsmasq-ipset
+Conflicts: 
+Menu-Depends: 
+Provides: 
+Section: utils
+Category: ROOter
+Repository: base
+Title: ROOter support for MK01K21
+Maintainer: Created by DM/makefile by Cobia@whirlpool
+Source: 
+Type: ipkg
+Description:   Helper scripts to enable ROOter support for MK01K21
+Created by DM/makefile by Cobia@whirlpool
+@@
+
+

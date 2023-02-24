@@ -1,0 +1,21 @@
+Source-Makefile: package/rooter-custom-builds/ext-custom-level1/Makefile
+
+Package: ext-custom-level1
+Submenu: CustomBuilds
+Version: 1.000-1
+Depends: +libc +USE_GLIBC:librt +USE_GLIBC:libpthread +ext-custom-basic +bwallocate +ext-wireguard +build-usb +ext-extra
+Conflicts: 
+Menu-Depends: 
+Provides: 
+Section: utils
+Category: ROOter
+Repository: base
+Title: Level1 Build packages
+Maintainer: Created by DM/makefile by Cobia@whirlpool
+Source: 
+Type: ipkg
+Description:   Level1 Build packages
+Created by DM/makefile by Cobia@whirlpool
+@@
+
+

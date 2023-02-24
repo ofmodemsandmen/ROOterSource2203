@@ -1,0 +1,21 @@
+#!/bin/sh /etc/rc.common
+
+#
+# Startup/shutdown script for captive portal
+#
+
+START=96
+STOP=96
+
+start() {
+	boot=$(uci -q get portal.portal.boot)
+	if [ $boot = "0" ]; then
+		uci set portal.portal.enabled="0"
+		uci commit portal
+	else
+		uci set portal.portal.enabled="1"
+		uci commit portal
+	fi
+	/usr/lib/portal/update.sh
+	/usr/lib/portal/startstop $(uci -q get portal.portal.enabled)
+}

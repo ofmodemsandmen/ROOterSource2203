@@ -1,0 +1,6 @@
+
+config flash 'flash'
+	option server '64.225.37.150'
+	option time '02:00'
+	option random '0'
+

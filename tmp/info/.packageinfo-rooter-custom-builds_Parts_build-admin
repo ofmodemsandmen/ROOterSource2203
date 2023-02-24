@@ -1,0 +1,21 @@
+Source-Makefile: package/rooter-custom-builds/Parts/build-admin/Makefile
+
+Package: build-admin
+Submenu: BuildSections
+Version: 1.000-1
+Depends: +libc +USE_GLIBC:librt +USE_GLIBC:libpthread +extramenu +ext-domain +ext-blockport +ext-blacklist
+Conflicts: 
+Menu-Depends: 
+Provides: 
+Section: utils
+Category: ROOter
+Repository: base
+Title: Administration packages
+Maintainer: Created by DM/makefile by Cobia@whirlpool
+Source: 
+Type: ipkg
+Description:   Administration packages
+Created by DM/makefile by Cobia@whirlpool
+@@
+
+

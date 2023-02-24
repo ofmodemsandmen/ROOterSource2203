@@ -1,0 +1,80 @@
+
+config info 'info'
+	option ispcnt '4'
+	option time '03:00'
+	option enabled '0'
+	option repeat '1'
+	option dayweek '0'
+	option daymon '1'
+
+config isp
+	option name 'AT&T 1'
+	list used '2 4 5 12 14 17 29 30 46 48 66'
+	list single '2 4 5 12 14 17 29 30 46 48 66'
+	list ca2 ''
+	list ca3 ''
+	option iccid '8901410'
+	
+config isp
+	option name 'AT&T 2'
+	list used '2 4 5 12 14 17 29 30 46 48 66'
+	list single '2 4 5 12 14 17 29 30 46 48 66'
+	list ca2 ''
+	list ca3 ''
+	option iccid '8901280'
+	
+config isp
+	option name 'AT&T FirstNet'
+	list used '2 4 5 12 14 17 29 30 46 48 66'
+	list single '2 4 5 12 14 17 29 30 46 48 66'
+	list ca2 ''
+	list ca3 ''
+	option iccid '890110'
+
+config isp
+	option name 'Verizon'
+	list used '2 4 5 13 46 48 66'
+	list single '2 4 5 13 46 48 66'
+	list ca2 ''
+	list ca3 ''
+	option iccid '89148'
+
+config isp
+	option name 'T-Mobile'
+	list used '2 4 5 12 41 46 48 66 71'
+	list single '2 4 5 12 41 46 48 66 71'
+	list ca2 ''
+	list ca3 ''
+	option iccid '890126'
+
+config isp
+	option name 'Freedom'
+	list used '2 4 5 7 12 13 17 30 66'
+	list single '2 4 5 7 12 13'
+	list ca2 ''
+	list ca3 ''
+	option iccid '891490'
+
+config isp
+	option name 'Telus'
+	list used '2 4 5 7 12 13 17 30 66'
+	list single '2 4 5 7 12 13 17 30 66'
+	list ca2 ''
+	list ca3 ''
+	option iccid '891223'
+
+config isp
+	option name 'Rogers'
+	list used '2 4 5 7 12 17 66 71'
+	list single '2 4 5 7 12 17 66 71'
+	list ca2 ''
+	list ca3 ''
+	option iccid '893027'
+
+config isp
+	option name 'Bell'
+	list used '2 4 5 7 12 13 17'
+	list single '2 4 5 7 12 13 17'
+	list ca2 ''
+	list ca3 ''
+	option iccid 'xxxxxx'

@@ -1,0 +1,6 @@
+config l2tp 'l2tp'
+	option url 'vpn101.sardistel.com'
+	option secret 'secret'
+	option username 'username'
+	option password 'password'
+	

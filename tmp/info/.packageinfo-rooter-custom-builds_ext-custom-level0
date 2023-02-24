@@ -1,0 +1,21 @@
+Source-Makefile: package/rooter-custom-builds/ext-custom-level0/Makefile
+
+Package: ext-custom-level0
+Submenu: CustomBuilds
+Version: 1.000-1
+Depends: +libc +USE_GLIBC:librt +USE_GLIBC:libpthread +ext-custom-basic +bwallocate +ext-zerotier +arc-storage
+Conflicts: 
+Menu-Depends: 
+Provides: 
+Section: utils
+Category: ROOter
+Repository: base
+Title: Level0 Build packages
+Maintainer: Created by DM/makefile by Cobia@whirlpool
+Source: 
+Type: ipkg
+Description:   Level0 Build packages
+Created by DM/makefile by Cobia@whirlpool
+@@
+
+

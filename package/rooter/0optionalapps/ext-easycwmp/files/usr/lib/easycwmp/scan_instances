@@ -1,0 +1,252 @@
+#!/usr/bin/lua
+
+wifi = {}
+scan = {}
+numnet = 0
+
+printf = function(s,...)
+	io.write(s:format(...))
+	local ss = s:format(...)
+end
+
+function trim(s)
+  	return (s:gsub("^%s*(.-)%s*$", "%1"))
+end
+
+function scan_open(rrx, rry)
+	rony = 1
+	if rry["encrypt"] == "Open" then
+		rony = 0
+	end
+	ronx = 1
+	if rrx["encrypt"] == "Open" then
+		ronx = 0
+	end
+	if ronx < rony then
+		return true
+	end
+	if ronx > rony then
+		return false
+	end
+	ronx = rrx["quality"]
+	rony = rry["quality"]
+	if ronx > rony then
+		return true
+	end
+	return false
+end
+
+function partition(arr, left, right)
+	local i = left
+	local j = right
+	local pivot = math.floor((left + right) / 2)
+	local tmp
+		while i <= j do
+		while scan_open(arr[i], arr[pivot]) do
+			i = i + 1
+		end
+		while scan_open(arr[pivot], arr[j]) do
+			j = j - 1
+		end
+		if i <= j then
+			tmp = arr[i]
+			arr[i] = arr[j]
+			arr[j] = tmp
+			i = i + 1
+			j = j - 1
+		end
+	end
+	return i, arr
+end
+
+function  quicksort(arr, left, right)
+	index, arr = partition(arr, left, right)
+	if left < (index - 1) then
+		quicksort(arr, left, index-1)
+	end
+	if index < right then
+		quicksort(arr, index, right)
+	end
+	return arr
+end
+
+function build_scan(j, k)
+	scan[k]["channel"] = wifi[j]["channel"]
+	scan[k]["essid"] = wifi[j]["essid"]
+	scan[k]["signal"] = tonumber(wifi[j]["signal"])
+	qc = tonumber(wifi[j]["quality"])
+	qm = tonumber(wifi[j]["quality_max"])
+	scan[k]["quality"] = math.floor((100 / qm) * qc)
+	scan[k]["ekey"] = wifi[j]["ekey"]
+	if wifi[j]["ekey"] == "none" then
+		scan[k]["encrypt"] = "Open"
+		scan[k]["encryption"] = wifi[j]["encryption"]
+	else
+		scan[k]["encrypt"] = wifi[j]["ekey"]
+		scan[k]["encryption"] = wifi[j]["encryption"]	
+	end
+end
+
+function get_networks()
+	file = io.open("/tmp/cssidlist", "r")
+	if file == nil then
+		numnet = 0
+		return
+	end
+	i = 0
+	cont = 2
+	line = file:read("*line")
+	repeat
+		if line == nil then
+			cont = 0
+		else
+			s, e = line:find("Cell ")
+			if s ~= nil then
+				cont = 1
+				essid=nil
+				i = i + 1
+				wifi[i] = {}
+				encryption = "none"
+				repeat
+					line = file:read("*line")
+					if line == nil then
+						cont = 0
+						break
+					else
+						s, e = line:find("Cell ")
+						if s ~= nil then
+							break
+						else
+							s, e = line:find("ESSID:")
+							if s ~= nil then
+								ee = line:len()
+								essid = trim(line:sub(e+3, ee-1))
+							end
+							s, e = line:find("Mode:")
+							if s ~= nil then
+								line1 = trim(line:sub(e+1))
+								bs, be = line1:find(" ", 1)
+								mode = trim(line1:sub(1, bs))
+								cs, ce = line1:find(" ")
+								line2 = trim(line1:sub(ce+1))
+								s, e = line2:find("Channel:")
+								channel = trim(line2:sub(e+2))
+							end
+							s, e = line:find("Signal:")
+							if s ~= nil then
+								line1 = trim(line:sub(e+1))
+								bs, be = line1:find(" ", 1)
+								signal = trim(line1:sub(1, bs))
+								cs, ce = line1:find(" ")
+								line2 = trim(line1:sub(ce+1))
+								s, e = line2:find("Quality:")
+								cs, ce = line2:find("/", e)
+								quality = trim(line2:sub(e+1, ce-1))
+								quality_max = trim(line2:sub(ce+1))
+							end
+							s, e = line:find("Encryption:")
+							if s ~= nil then
+								cs, ce = line:find("WEP")
+								if cs == nil then
+									encrypt = trim(line:sub(e+2))
+									s, e = encrypt:find("none")
+									if s ~= nil then
+										encryption = "none"
+									else
+										s, e = encrypt:find("mixed")
+										if s ~= nil then
+											encryption = "psk-mixed"
+										else
+											s, e = encrypt:find("WPA2")
+											if s ~= nil then
+												encryption = "psk2"
+											else
+												encryption = "psk"
+											end
+										end
+									end
+								else
+									cont = 2
+									i = i - 1
+									break
+								end
+							end
+						end
+				end
+				until 1==0
+			else
+				line = file:read("*line")
+			end
+		end
+		if cont < 2 then
+			if i > 0 then
+				if essid ~= nil and mode == "Master" then
+					wifi[i]["essid"] = essid
+					wifi[i]["channel"] = channel
+					wifi[i]["signal"] = signal
+					wifi[i]["quality"] = quality
+					wifi[i]["quality_max"] = quality_max
+					wifi[i]["ekey"] = encrypt
+					wifi[i]["encryption"] = encryption
+				end
+			end
+		end
+		if cont == 0 then
+			break
+		end
+		cont = 2
+	until 1==0
+	file:close()
+
+	k = 0
+	if i > 0 then
+		for j=1, i do
+			if wifi[j]["essid"] ~= nil and tonumber(wifi[j]["quality"]) > 0 then
+				if k < 1 then
+					k = k+1
+					scan[k] = {}
+					build_scan(j, k)
+				else
+					flag = 0
+					for l=1, k do
+						if wifi[j]["essid"] == scan[l]["essid"] and wifi[j]["channel"] == scan[l]["channel"]  and wifi[j]["ekey"] == scan[l]["ekey"] then
+							qc = tonumber(wifi[j]["quality"])
+							qm = tonumber(wifi[j]["quality_max"])
+							qual = math.floor((100 / qm) * qc)
+							if qual > scan[l]["quality"] then
+								build_scan(j, l)
+							end
+							flag = 1
+							break
+						end
+					end
+					if flag == 0 then
+						k = k+1
+						scan[k] = {}
+						build_scan(j, k)
+					end
+				end
+			end
+		end
+		scan = quicksort(scan, 1, k)
+	end
+	numnet = k
+end
+
+get_networks()
+
+if numnet > 0 then 
+	for m=1, numnet do 
+		data = scan[m]["essid"]
+		os.execute("uci set scan.scann" .. tostring(m) .. "=scann")
+		os.execute("uci set scan.scann" .. tostring(m) .. ".essid=" .. "\"" .. data .. "\"")
+		data = scan[m]["channel"]
+		os.execute("uci set scan.scann" .. tostring(m) .. ".channel=" .. "\"" .. data .. "\"")
+		data = scan[m]["quality"]
+		os.execute("uci set scan.scann" .. tostring(m) .. ".quality=" .. "\"" .. data .. "%\"")
+		data = scan[m]["ekey"]
+		os.execute("uci set scan.scann" .. tostring(m) .. ".ekey=" .. "\"" .. data .. "\"")
+		os.execute("uci set scan.scann" .. tostring(m) .. ".scan_instance=" .. "\"" .. tostring(m) .. "\"")
+	end
+	os.execute("uci commit scan")
+end

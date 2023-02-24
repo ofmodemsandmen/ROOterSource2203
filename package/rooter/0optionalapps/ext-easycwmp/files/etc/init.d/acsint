@@ -1,0 +1,34 @@
+#!/bin/sh /etc/rc.common
+# Copyright (C) 2013 OpenWrt.org
+
+START=88
+USE_PROCD=1
+
+log() {
+	logger -t "ACS" "$@"
+}
+
+start_service()
+{
+	url=$(uci -q get easycwmp.@acs[0].url)
+	username=$(uci -q get easycwmp.@acs[0].username)
+	password=$(uci -q get easycwmp.@acs[0].password)
+	enable=$(uci -q get easycwmp.@local[0].enable)
+	aip=$(uci -q get acs.acs.ip)
+	if [ "$aip" != "$url" ]; then
+		uci set acs.acs.ip="$url"
+	fi
+	aip=$(uci -q get acs.acs.username)
+	if [ "$aip" != "$username" ]; then
+		uci set acs.acs.username="$username"
+	fi
+	aip=$(uci -q get acs.acs.password)
+	if [ "$aip" != "$password" ]; then
+		uci set acs.acs.password="$password"
+	fi
+	aip=$(uci -q get acs.acs.enable)
+	if [ "$aip" != "$enable" ]; then
+		uci set acs.acs.enable="$enable"
+	fi
+	uci commit acs
+}

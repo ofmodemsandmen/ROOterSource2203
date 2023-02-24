@@ -1,0 +1,26 @@
+Source-Makefile: package/rooter-extra/ext-serial/Makefile
+
+Package: ext-serial
+Submenu: Optional Applications
+Version: 1.10.1-0
+Depends: +libc +USE_GLIBC:librt +USE_GLIBC:libpthread +libpthread +libstdcpp +kmod-tun +ip +libminiupnpc +libnatpmp
+Conflicts: 
+Menu-Depends: 
+Provides: 
+Section: utils
+Category: ROOter
+Repository: base
+Title: Create Serial 
+Maintainer: Moritz Warning <moritzwarning@web.de>
+Source: ext-serial-1.10.1.tar.gz
+License: BSL 1.1
+LicenseFiles: LICENSE.txt
+Type: ipkg
+Description: 	Serial # generator
+Moritz Warning <moritzwarning@web.de>
+@@
+Config:
+	source "package/rooter-extra/ext-serial/Config.in"
+@@
+
+

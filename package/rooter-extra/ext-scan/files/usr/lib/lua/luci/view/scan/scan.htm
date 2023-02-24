@@ -1,0 +1,626 @@
+<%+header%>
+
+<script type="text/javascript" src="<%=resource%>/xhr.js"></script>
+<script type="text/javascript">//<![CDATA[
+
+var isp = new Array() ;
+var iccid = new Array() ;
+var ispcnt;
+var arr;
+var uarr;
+var runbtn;
+var dx;
+var repeat;
+var dayweek;
+var daymon;
+var btncolor = "#FF8C00";
+var btncolor1 = "#0078d0"
+var btncolor2 = "#c0c0c0";
+var btncolor3 = "#ff7901";
+var btncolor4 = "#ffdb01";
+var running;
+var stopping = "0";
+
+head0 = '<td>&nbsp;</td>';
+head1 = '<div align="left" style="font-size : 15px; width: 100%; height: 30px;border-style:double"><strong>&nbsp;&nbsp;';
+head2 = '</strong></div>';
+head3='<div class="button-73" role="button" style="color:black;"  onclick="ispedit1(this)" id="'
+head3a = '">'
+head4 = '</div>'
+
+	function btnset()
+	{
+		//document.getElementById("attxt").value=runbtn;
+		tim = document.getElementById('appt').value;
+		dx = 1;
+		if ( runbtn == "1" )
+		{
+			dx = 0;
+			runbtn = "1";
+			document.getElementById('runbtn').innerHTML="<%:Automatic Scan at %>" + tim;
+			document.getElementById('runbtn').style.background=btncolor;
+			document.getElementById("timebtn").style.display="none";
+			document.getElementById("timebtn").style.visibility="hidden";
+			//document.getElementById("timebtn").disabled=true;
+			//document.getElementById("appt").disabled=true;
+			document.getElementById("appt").style.display="none";
+			document.getElementById("appt").style.visibility="hidden";
+		}
+		else
+		{
+			runbtn = "0";
+			document.getElementById('runbtn').innerHTML="<%:Automatic Scan Not Set%>";
+			document.getElementById('runbtn').style.background=btncolor1;
+			document.getElementById("timebtn").style.display="block";
+			document.getElementById("timebtn").style.visibility="visible";
+			document.getElementById("appt").style.display="block";
+			document.getElementById("appt").style.visibility="visible";
+			//document.getElementById("timebtn").disabled=false;
+			//document.getElementById("appt").disabled=false;
+		}
+		if ( running == "1" )
+		{
+			document.getElementById("stopbtn").style.display="block";
+			document.getElementById("stopbtn").style.visibility="visible";
+			if ( stopping == "0" )
+			{
+				document.getElementById('stopbtn').style.background=btncolor3;
+				document.getElementById('stopbtn').innerHTML="<%:Stop Scan%>";
+			}
+			else
+			{
+				document.getElementById('stopbtn').style.background=btncolor4;
+				document.getElementById('stopbtn').innerHTML="<%:Stopping Scan%>";
+			}
+			document.getElementById("manbtn").disabled=true;
+			document.getElementById('manbtn').style.background=btncolor2;
+		}
+		else
+		{
+			document.getElementById("stopbtn").style.display="none";
+			document.getElementById("stopbtn").style.visibility="hidden";
+			document.getElementById("stopbtn").disabled=false;
+			document.getElementById('stopbtn').style.background=btncolor3;
+			document.getElementById('stopbtn').innerHTML="<%:Stop Scan%>";
+			document.getElementById("manbtn").disabled=false;
+			document.getElementById('manbtn').style.background=btncolor1;
+			stopping = "0";
+		}
+	}
+	
+		
+	function setrepeat(rep) {
+		if ( rep == "0" || rep == "1" )
+		{
+			document.getElementById("dayweek").style.display="none";
+			document.getElementById("dayweek").style.visibility="hidden";
+			document.getElementById("dayweek1").style.display="none";
+			document.getElementById("dayweek1").style.visibility="hidden";
+			document.getElementById("daymon1").style.display="none";
+			document.getElementById("daymon1").style.visibility="hidden";
+			document.getElementById("daymon").style.display="none";
+			document.getElementById("daymon").style.visibility="hidden";
+		}
+		if ( rep == "2" )
+		{
+			document.getElementById("dayweek").style.display="block";
+			document.getElementById("dayweek").style.visibility="visible";
+			document.getElementById("dayweek1").style.display="block";
+			document.getElementById("dayweek1").style.visibility="visible";
+			document.getElementById("daymon1").style.display="none";
+			document.getElementById("daymon1").style.visibility="hidden";
+			document.getElementById("daymon").style.display="none";
+			document.getElementById("daymon").style.visibility="hidden";
+		}
+		if ( rep == "3" )
+		{
+			document.getElementById("dayweek").style.display="none";
+			document.getElementById("dayweek").style.visibility="hidden";
+			document.getElementById("dayweek1").style.display="none";
+			document.getElementById("dayweek1").style.visibility="hidden";
+			document.getElementById("daymon1").style.display="block";
+			document.getElementById("daymon1").style.visibility="visible";
+			document.getElementById("daymon").style.display="block";
+			document.getElementById("daymon").style.visibility="visible";
+		}
+	}
+	
+
+	XHR.get('<%=luci.dispatcher.build_url("admin", "modem", "getdata")%>',
+		null,
+		function(x, rv)
+		{
+			ispcnt = rv.ispcnt;
+			isp = rv.isp;
+			runbtn = rv.enabled;
+			repeat = rv.repeat;
+			dayweek = rv.dayweek;
+			document.getElementById('dayweek').value = dayweek;
+			daymon = rv.daymon;
+			document.getElementById('daymon').value = daymon;
+			document.getElementById('repeat').selectedIndex = repeat;
+			setrepeat(repeat);
+			document.getElementById('appt').value = rv.time;
+			running = rv.running;
+			stopping = rv.stopping;
+			btnset();
+			var i;
+							
+			var tbl = document.getElementById('dym');
+			while (tbl.rows.length > 1)
+				tbl.deleteRow(1);
+			for(i=0;i<parseInt(ispcnt);i++)
+			{
+				line = isp[i];
+				arr=(line.split("|"));
+				name = arr[0];
+				used = arr[1];
+				single = arr[2];
+				iccid[i] = arr[3];
+				
+				tr = tbl.insertRow(-1);
+				row = tr.insertCell(-1);
+				row.innerHTML = '&nbsp;';
+				row.style.width = '20px' ;
+				row = tr.insertCell(-1);
+				row.innerHTML = head3 + name + head3a + name + head4;
+				row.style.width = '100px' ;
+				row = tr.insertCell(-1);
+				row.innerHTML = head1 + "Bands Used by ISP" + head2;
+				row.style.width = '140px' ;
+				
+				uarr=(used.split(" "));
+				len = uarr.length;
+				ustr="B" + uarr[0];
+				for(j=1;j<len;j++)
+				{
+					ustr = ustr + "&nbsp;&nbsp;&nbsp;B" + uarr[j];
+				}
+				row = tr.insertCell(-1);
+				row.innerHTML = head1 + ustr + head2;
+				row.style.width = '200px' ;
+				row = tr.insertCell(-1);
+				row.style.width = '450px' ;
+				
+				uarr=(single.split(" "));
+				len = uarr.length;
+				ustr="B" + uarr[0];
+				for(j=1;j<len;j++)
+				{
+					ustr = ustr + "&nbsp;&nbsp;&nbsp;B" + uarr[j];
+				}
+				tr = tbl.insertRow(-1);
+				row = tr.insertCell(-1);
+				row.innerHTML = '&nbsp;';
+				row = tr.insertCell(-1);
+				row.innerHTML = '&nbsp;';
+				row = tr.insertCell(-1);
+				row.innerHTML = head1 + "Bands to Test" + head2;
+				row = tr.insertCell(-1);
+				row.innerHTML = head1 + ustr + head2;
+			}
+		}
+	); 
+	
+	XHR.poll(20, '<%=luci.dispatcher.build_url("admin", "modem", "scantest")%>', null,
+		function(x, rv)
+		{
+			document.getElementById("scantxt").value=rv.scantest;
+			runbtn = rv.enabled;
+			running = rv.running;
+			stopping = rv.stopping;
+			btnset();
+		}
+	);
+	
+	function btnenable(btn)
+	{
+		dx = 0;
+		if ( runbtn == "0" )
+		{
+			tim = document.getElementById('appt').value;
+			if ( tim == "" ) {
+				return false;
+			}
+			dx = 1;
+			runbtn = "1";
+			document.getElementById('runbtn').innerHTML="<%:Automatic Scan at %>" + tim;
+			document.getElementById('runbtn').style.background=btncolor;
+			document.getElementById("timebtn").style.display="none";
+			document.getElementById("timebtn").style.visibility="hidden";
+			document.getElementById("appt").style.display="none";
+			document.getElementById("appt").style.visibility="hidden";
+		}
+		else
+		{
+			runbtn = "0";
+			document.getElementById('runbtn').innerHTML="<%:Automatic Scan Not Set%>";
+			document.getElementById('runbtn').style.background=btncolor1;
+			document.getElementById("timebtn").style.display="block";
+			document.getElementById("timebtn").style.visibility="visible";
+			document.getElementById("appt").style.display="block";
+			document.getElementById("appt").style.visibility="visible";
+		}
+		XHR.get('<%=luci.dispatcher.build_url("admin", "modem", "scanenable")%>',
+			{ set: dx },
+			function()
+			{
+
+			}
+		); 
+		return false;
+	}
+	
+	function timeenable(btn) {
+		tim = document.getElementById('appt').value;
+		//document.getElementById("attxt").value=tim;
+		if ( tim == "")
+		{
+			return false;
+		}
+		XHR.get('<%=luci.dispatcher.build_url("admin", "modem", "settime")%>',
+			{ set: tim },
+			function()
+			{
+				alert("<%:Start Time has been set to %>" + tim);
+			}
+		);
+	}
+
+	function chrepeat() {
+		repeat = document.getElementById('repeat').value;
+		setrepeat(repeat);
+		XHR.get('<%=luci.dispatcher.build_url("admin", "modem", "setrepeat")%>',
+			{ set: repeat },
+			function()
+			{
+				
+			}
+		);
+	}
+	
+	function chday() {
+		dayweek = document.getElementById('dayweek').value;
+		XHR.get('<%=luci.dispatcher.build_url("admin", "modem", "setdayweek")%>',
+			{ set: dayweek },
+			function()
+			{
+				
+			}
+		);
+	}
+	
+	function chmon() {
+		daymon = document.getElementById('daymon').value;
+		XHR.get('<%=luci.dispatcher.build_url("admin", "modem", "setdaymon")%>',
+			{ set: daymon },
+			function()
+			{
+				
+			}
+		);
+	}
+	
+	function ispedit(btn) {
+		ispname = btn.id;
+		for(i=0;i<parseInt(ispcnt);i++)
+		{
+			line = isp[i];
+			arr=(line.split("|"));
+			name = arr[0];
+			used = arr[1];
+			single = arr[2];
+			if ( ispname == name )
+			{
+				document.getElementById("popisp").innerHTML = "<strong>&nbsp;&nbsp;" + name + "</strong>";
+				document.getElementById("popup").style.display = "block";
+			}
+		}
+	}
+	
+	function done() { 
+		document.getElementById("popup").style.display = "none";
+	}
+	
+	function save() { 
+		document.getElementById("popup").style.display = "none";
+	}
+	
+	function manual() {
+		if ( running == "0" )
+		{
+			document.getElementById("manbtn").disabled=true;
+			document.getElementById('manbtn').style.background=btncolor2;
+			XHR.get('<%=luci.dispatcher.build_url("admin", "modem", "running")%>',null,
+				function()
+				{
+					
+				}
+			);
+		}
+	}
+	
+	function stopscan() {
+		document.getElementById("stopbtn").disabled=true;
+		stopping = "1";
+		document.getElementById('stopbtn').style.background=btncolor4;
+		document.getElementById('stopbtn').innerHTML="<%:Stopping Scan%>";
+		XHR.get('<%=luci.dispatcher.build_url("admin", "modem", "stopscan")%>',null,
+			function()
+			{
+				
+			}
+		);
+	}
+
+			//document.getElementById("attxt").value=ustr;
+			// ;visibility:hidden;display:none
+		
+//]]></script>
+
+<form method="post" action="<%=REQUEST_URI%>">
+<div class="cbi-map" id="cbi-misc">
+<h2><a id="content" name="content"><%:Band Scan Testing%></a></h2>
+<div class="cbi-map-descr"><%:Scan all bands for the best speed and signal%></div>
+<head>
+	<link rel="stylesheet" href="<%=resource%>/buttons/buttons.css">
+	<style>
+	#popup {
+		width:100%;
+		max-width: 900px;
+		height:550px;
+		padding:20px;
+		background-color:gainsboro;  
+		border-style : solid;	
+		position:fixed;
+		top : 10%;
+		margin-left: auto;
+		margin-right: auto;
+		left: 0;
+		right: 0;
+		text-align: center;
+		display:none;
+		overflow: scroll;
+		z-index: 300;
+	}
+	
+	</style>
+
+</head>
+
+<div id="popup">
+	<table border="0">
+		<tr>
+			<td width="250px">
+				<div style="width: 250px;" class="button-40" role="button" id="popisp"></div>
+			</td>
+			<td width="50px">&nbsp;</td>
+			<td width="300px">
+				<div style="width: 300px;color:black" id="savebtn" class="button-33" role="button" onclick="return save()"><%:Exit & Save Changes%></div>
+			</td>
+			<td width="50px">&nbsp;</td>
+			<td width="250px">
+				<div style="width: 200px;color:white;" id="exitbtn" class="button-34" role="button" onclick="return done()"><%:Exit w/o Saving%></div>
+			</td>
+		</tr>
+	</table>
+	<table border="1">
+		<tr>
+			<td width="80px">
+				<div>
+					<label class="toggle">
+					  <input class="toggle-checkbox" type="checkbox">
+					  <div class="toggle-switch"></div>
+					  <span class="toggle-label" style="font-size : 20px;">B66</span>
+					</label>
+				</div>
+			</td>
+			<td width="80px">
+				<div>
+					<label class="toggle">
+					  <input class="toggle-checkbox" type="checkbox">
+					  <div class="toggle-switch"></div>
+					  <span class="toggle-label" style="font-size : 20px;">B71</span>
+					</label>
+				</div>
+			</td>
+			<td width="840px">&nbsp;</td>
+		</tr>
+	</table>
+</div>
+
+<table width="550"  border="0">
+	<tr>
+		<td width="10%">&nbsp;</td>
+		<td width="10%">&nbsp;</td>
+		<td width="10%">&nbsp;</td>
+		<td width="10%">&nbsp;</td>
+		<td width="60%">&nbsp;</td>
+	</tr>
+  	<tr>
+		<td>&nbsp;</td>
+		<td>
+			<div style="width: 400px;color:white;" id="runbtn" class="button-71" role="button" onclick="return btnenable(this)">&nbsp;
+			</div>
+		</td>
+		<td>&nbsp;</td>
+		<td>
+			<div style="width: 400px;color:white;" id="manbtn" class="button-71" role="button" onclick="manual()"><%:Manually Scan Once%>
+			</div>
+		</td>
+	</tr>
+</table>
+
+<table width="440"  border="0">
+	<tr>
+		<td width="8%">&nbsp;</td>
+		<td width="10%">
+			<div style="width: 350px;color:black;" id="timebtn" class="button-82-pushable" role="button" onclick="return timeenable(this">
+				  <span class="button-82-shadow"></span>
+				  <span class="button-82-edge"></span>
+				  <span class="button-82-front text">
+					<%:Set Automatic Start Time%>
+				  </span>
+			</div>
+		</td>
+		<td width="10%">
+			<input type="time" id="appt" style="font-size : 18px; width: 150px; height: 40px;border-style:double">
+		</td>
+		<td width="72%">&nbsp;</td>
+	</tr>
+</table>
+<table>
+	<tr>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+	</tr>
+</table>
+
+<table width="550"  border="0">
+	<tr>
+		<td width="75px"><div align="center" style="font-size : 20px; width: 100%; height: 35px;"><strong>&nbsp;&nbsp;<%:Automatic Scan Settings%></strong></div></td>
+		<td width="300px">
+			<select id="repeat" style="font-size : 18px; width: 300px; height: 40px;" onchange="chrepeat()">
+			  <option value="0">Run Every Day</option>
+			  <option value="1">Run Once then Disable</option>
+			  <option value="2">Run Once a Week</option>
+			  <option value="3">Run Once a Month</option>
+			</select>
+		</td>
+		<td width="175px">&nbsp;</td>
+	</tr>
+</table>
+<table  id="dayweek1" width="750"  border="0">
+	<tr>
+		<td  width="210px"><div align="center" style="font-size : 20px; width: 100%; height: 35px;"><strong>&nbsp;&nbsp;<%:Weekday%></strong></div></td>
+		<td width="300px">
+			<select id="dayweek" style="font-size : 18px; width: 300px; height: 40px;visibility:hidden;display:none" onchange="chday()">
+			  <option value="0">Sunday</option>
+			  <option value="1">Monday</option>
+			  <option value="2">Tueday</option>
+			  <option value="3">Wednesday</option>
+			  <option value="4">Thursday</option>
+			  <option value="5">Friday</option>
+			  <option value="6">Saturday</option>
+			</select>
+		</td>
+		<td width="250px">&nbsp;</td>
+	</tr>
+</table> 
+<table  id="daymon1" width="750"  border="0">
+	<tr>
+		<td  width="210px"><div align="center" style="font-size : 20px; width: 100%; height: 35px;"><strong>&nbsp;&nbsp;<%:Day%></strong></div></td>
+		<td width="300px">
+			<select id="daymon" style="font-size : 18px; width: 300px; height: 40px;visibility:hidden;display:none" onchange="chmon()">
+				<option value="1" ><%:1st of month%></option>
+				<option value="2"><%:2nd of month%></option>
+				<option value="3"><%:3rd of month%></option>
+				<option value="4"><%:4th of month%></option>
+				<option value="5"><%:5th of month%></option>
+				<option value="6"><%:6th of month%></option>
+				<option value="7"><%:7th of month%></option>
+				<option value="8"><%:8th of month%></option>
+				<option value="9"><%:9th of month%></option>
+				<option value="10"><%:10th of month%></option>
+				<option value="11"><%:11th of month%></option>
+				<option value="12"><%:12th of month%></option>
+				<option value="13"><%:13th of month%></option>
+				<option value="14"><%:14th of month%></option>
+				<option value="15"><%:15th of month%></option>
+				<option value="16"><%:16th of month%></option>
+				<option value="17"><%:17th of month%></option>
+				<option value="18"><%:18th of month%></option>
+				<option value="19"><%:19th of month%></option>
+				<option value="20"><%:20th of month%></option>
+				<option value="21"><%:21th of month%></option>
+				<option value="22"><%:22th of month%></option>
+				<option value="23"><%:23th of month%></option>
+				<option value="24"><%:24th of month%></option>
+				<option value="25"><%:25th of month%></option>
+				<option value="26"><%:26th of month%></option>
+				<option value="27"><%:27th of month%></option>
+				<option value="28"><%:28th of month%></option>
+			</select>
+		</td>
+		<td width="250px">&nbsp;</td>
+	</tr>
+</table> 
+<table>
+	<tr>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+	</tr>
+</table> 
+
+<table width="800"  border="0">
+	<tr>
+		<td width="20px">&nbsp;</td>
+		<td width="250px"><div align="left" style="font-size : 20px; width: 100%; height: 35px;border-style:double"><strong>&nbsp;&nbsp;<%:Scan Test Results%></strong></div></td>
+		<td width="250px">
+			<div style="width: 250px;color:black;visibility:hidden;display:none" id="stopbtn" class="button-71" role="button" onclick="stopscan()"><%:Stop Scan%>
+			</div>
+	<!--		<div style="width: 250px;color:black;visibility:hidden;display:none"" id="stopbtn" class="button-82-pushable" role="button" onclick="stopscan()">
+				  <span class="button-82-shadow"></span>
+				  <span class="button-82-edge"></span>
+				  <span class="button-82-front text">
+					<%:Stop Scan%>
+				  </span>
+			</div> -->
+		</td>
+				 
+		<td width="280px">&nbsp;</td>
+	</tr>
+</table>
+
+<table id="cmdtxt" width="700"  border="0" style="display:table;">
+  	<tr>
+    	<td width="100%">
+			<textarea readonly="readonly" name="scantxt" id="scantxt" rows="12" style="width: 600px;" maxlength="160"></textarea>
+		</td>
+	</tr>
+</table>
+
+<table width="800"  border="0">
+	<tr>
+		<td>&nbsp;</td>
+	</tr>
+</table>
+
+<table width="800"  border="0">
+	<tr>
+		<td width="20px">&nbsp;</td>
+		<td width="250px"><div align="left" style="font-size : 20px; width: 100%; height: 35px;border-style:double"><strong>&nbsp;&nbsp;<%:Supported ISP%></strong></div></td>
+		<td width="530px">&nbsp;</td>
+	</tr>
+	<tr>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+	</tr>
+</table>
+
+<table width="800"  border="0" border-style="outset" id="dym">
+
+</table>
+
+<table>
+	<tr>
+		<td>&nbsp;</td>
+	</tr>
+</table>
+
+<table id="cmdtxt" width="700"  border="0" style="display:table;visibility:hidden;display:none">
+  	<tr>
+    		<td width="100%">
+		<textarea readonly="readonly" name="attxt" id="attxt" rows="6" style="width: 600px;" maxlength="160"></textarea>
+		</td>
+	</tr>
+</table>
+	
+</div>
+</form>
+<%+footer%>

@@ -1,0 +1,191 @@
+#!/bin/sh
+. /usr/share/libubox/jshn.sh
+. /lib/functions.sh
+# Copyright (C) 2016 MOHAMED Kallel <mohamed.kallel@yahoo.fr>
+
+#common_execute_method_param "$parameter" "$permission" "$get_cmd" "$set_cmd" "xsd:$type" "$forcedinform"
+#  $forcedinform should be set to 1 if the parameter is included in the inform message otherwise empty
+#  Default of $type = string
+
+#############################
+#   Entry point functions   #
+#############################
+
+
+prefix_list="$prefix_list $DMROOT.Control."
+entry_execute_method_list="$entry_execute_method_list entry_execute_method_root_Control"
+
+entry_execute_method_root_Control() {
+	case "$1" in ""|"$DMROOT."|"$DMROOT.Control."*)
+		common_execute_method_obj "$DMROOT.Control." "0" 
+		common_execute_method_obj "$DMROOT.Control.Internet." "0"
+		common_execute_method_param "$DMROOT.Control.Internet.Block" "1" "internet_get_Block" "internet_set_Block" "xsd:boolean"
+		common_execute_method_param "$DMROOT.Control.Internet.Password" "0" "internet_get_Password" 
+		common_execute_method_obj "$DMROOT.Control.Terminal." "0"
+		common_execute_method_param "$DMROOT.Control.Terminal.Limited" "1" "terminal_get_Limited" "terminal_set_Limited" "xsd:boolean"
+		common_execute_method_obj "$DMROOT.Control.Terminal." "0"
+		common_execute_method_param "$DMROOT.Control.Terminal.Enabled" "1" "terminal_get_Enabled" "terminal_set_Enabled" "xsd:boolean"
+		common_execute_method_param "$DMROOT.Control.Terminal.Password" "1" "terminal_get_Password" "terminal_set_Password"
+		common_execute_method_obj "$DMROOT.Control.Bandwidth." "0"
+		common_execute_method_param "$DMROOT.Control.Bandwidth.Enabled" "1" "bandwidth_get_Enabled" "bandwidth_set_Enabled" "xsd:boolean"
+		common_execute_method_param "$DMROOT.Control.Bandwidth.Allocation" "1" "bandwidth_get_Allocation" "bandwidth_set_Allocation" "xsd:unsignedInt"
+		common_execute_method_param "$DMROOT.Control.Bandwidth.Password" "1" "bandwidth_get_Password" "bandwidth_set_Password"
+		common_execute_method_param "$DMROOT.Control.Bandwidth.Rollover" "1" "bandwidth_get_Rollover" "bandwidth_set_Rollover"
+		common_execute_method_obj "$DMROOT.Control.Admin." "0"
+		common_execute_method_param "$DMROOT.Control.Admin.Password" "1" "admin_get_Password" "admin_set_Password"
+		return 0
+		;;
+	esac
+	return $E_INVALID_PARAMETER_NAME;
+}
+
+internet_get_Block() {
+	local bl=$(uci -q get nodogsplash.nodogsplash.enabled)
+	echo $bl
+}
+
+internet_set_Block() {
+	local val=`echo "$1" | tr '[A-Z]' '[a-z]'`
+	if [ "$val" = "1" -o "$val" = "true" ]; then
+		/etc/nodogsplash/control block
+	else
+		/etc/nodogsplash/control unblock
+	fi
+	return 0
+}
+
+
+handle_pass() {
+	local pass=$1
+	if [ $cnt -eq $counter ]; then
+		newpass=$pass
+	fi
+	cnt=$((${cnt}+1))
+}
+
+do_pass() {
+	local config=$1
+	config_list_foreach "$config" password handle_pass
+}
+
+internet_get_Password() {
+	counter=$(uci -q get nodogsplash.password.counter)
+	cnt=1
+	config_load nodogsplash
+	config_foreach do_pass password
+	echo "$newpass"
+}
+
+terminal_get_Limited() {
+	local bl=$(uci -q get custom.atcmd.lock)
+	echo $bl
+}
+
+terminal_set_Limited() {
+	local val=`echo "$1" | tr '[A-Z]' '[a-z]'`
+	if [ "$val" = "1" -o "$val" = "true" ]; then
+		uci set custom.atcmd.lock='1'
+	else
+		uci set custom.atcmd.lock='0'
+	fi
+	uci commit custom
+	return 0
+}
+
+terminal_get_Enabled() {
+	local bl=$(uci -q get custom.atcmd.enabled)
+	echo $bl
+}
+
+terminal_set_Enabled() {
+	local val=`echo "$1" | tr '[A-Z]' '[a-z]'`
+	if [ "$val" = "1" -o "$val" = "true" ]; then
+		uci set custom.atcmd.enabled='1'
+	else
+		uci set custom.atcmd.enabled='0'
+	fi
+	uci commit custom
+	return 0
+}
+
+terminal_get_Password() {
+	local bl=$(uci -q get custom.atcmd.password)
+	echo $bl
+}
+
+terminal_set_Password() {
+	uci set custom.atcmd.password=$1
+	uci commit custom
+	return 0
+}
+
+bandwidth_get_Enabled() {
+	local bl=$(uci -q get custom.bwallocate.enabled)
+	echo $bl
+}
+
+bandwidth_set_Enabled() {
+	local val=`echo "$1" | tr '[A-Z]' '[a-z]'`
+	if [ "$val" = "1" -o "$val" = "true" ]; then
+		uci set custom.bwallocate.enabled='1'
+		uci set custom.bwallocate.lock='1'
+	else
+		uci set custom.bwallocate.enabled='0'
+		uci set custom.bwallocate.lock='0'
+	fi
+	uci commit custom
+	return 0
+}
+
+bandwidth_get_Allocation() {
+	local bl=$(uci -q get custom.bwallocate.allocate)
+	echo $bl
+}
+
+bandwidth_set_Allocation() {
+	uci set custom.bwallocate.allocate=$1
+	uci commit custom
+	return 0
+}
+
+bandwidth_get_Password() {
+	local bl=$(uci -q get custom.bwallocate.password)
+	echo $bl
+}
+
+bandwidth_set_Password() {
+	uci set custom.bwallocate.password=$1
+	uci commit custom
+	return 0
+}
+
+bandwidth_get_Rollover() {
+	local bl=$(uci -q get custom.bwallocate.rollover)
+	echo $bl
+}
+
+bandwidth_set_Rollover() {
+	uci set custom.bwallocate.rollover=$1
+	uci commit custom
+	return 0
+}
+
+admin_get_Password() {
+	local bl=$(uci -q get custom.admin.password)
+	if [ -z $bl ]; then
+		bl="Unknown"
+	fi
+	echo $bl
+}
+
+admin_set_Password() {
+	local bl=$(uci -q get custom.admin)
+	if [ -z $bl ]; then
+		uci set custom.admin='admin'
+	fi
+	uci set custom.admin.password=$1
+	uci commit custom
+	router=$1
+	echo -e "$router\n$router" | passwd root
+}
+

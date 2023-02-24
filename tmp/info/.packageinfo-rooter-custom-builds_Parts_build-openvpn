@@ -1,0 +1,21 @@
+Source-Makefile: package/rooter-custom-builds/Parts/build-openvpn/Makefile
+
+Package: build-openvpn
+Submenu: BuildSections
+Version: 1.000-1
+Depends: +libc +USE_GLIBC:librt +USE_GLIBC:libpthread +luci-app-rootervpn +openvpn-easy-rsa +openvpn-openssl
+Conflicts: 
+Menu-Depends: 
+Provides: 
+Section: utils
+Category: ROOter
+Repository: base
+Title: OpenVpn packages
+Maintainer: Created by DM/makefile by Cobia@whirlpool
+Source: 
+Type: ipkg
+Description:   OpenVpn packages
+Created by DM/makefile by Cobia@whirlpool
+@@
+
+

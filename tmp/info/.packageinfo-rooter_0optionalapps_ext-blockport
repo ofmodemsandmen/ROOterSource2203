@@ -1,0 +1,21 @@
+Source-Makefile: package/rooter/0optionalapps/ext-blockport/Makefile
+
+Package: ext-blockport
+Submenu: Optional Applications
+Version: 1.000-1
+Depends: +libc +USE_GLIBC:librt +USE_GLIBC:libpthread 
+Conflicts: 
+Menu-Depends: 
+Provides: 
+Section: utils
+Category: ROOter
+Repository: base
+Title: Install Port Blocking
+Maintainer: Created by DM/makefile by Cobia@whirlpool
+Source: 
+Type: ipkg
+Description:   Helper scripts to install Port Blocking
+Created by DM/makefile by Cobia@whirlpool
+@@
+
+

@@ -1,0 +1,21 @@
+Source-Makefile: package/rooter-custom-builds/Parts/build-wifi/Makefile
+
+Package: build-wifi
+Submenu: BuildSections
+Version: 1.000-1
+Depends: +libc +USE_GLIBC:librt +USE_GLIBC:libpthread +luci-app-guestwifi +luci-app-hotspot +wpad
+Conflicts: 
+Menu-Depends: 
+Provides: 
+Section: utils
+Category: ROOter
+Repository: base
+Title: Wifi packages
+Maintainer: Created by DM/makefile by Cobia@whirlpool
+Source: 
+Type: ipkg
+Description:   Wifi packages
+Created by DM/makefile by Cobia@whirlpool
+@@
+
+

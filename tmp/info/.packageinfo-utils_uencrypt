@@ -1,0 +1,38 @@
+Source-Makefile: package/utils/uencrypt/Makefile
+
+Package: uencrypt
+Version: 3
+Depends: +libc +USE_GLIBC:librt +USE_GLIBC:libpthread @TARGET_ramips_mt7621 +UENCRYPT_WOLFSSL:libwolfssl +UENCRYPT_OPENSSL:libopenssl
+Conflicts: 
+Menu-Depends: 
+Provides: 
+Section: utils
+Category: Base system
+Title: Decryption utility for Arcadyan WG4xx223
+Maintainer: Eneas U de Queiroz <cotequeiroz@gmail.com>
+Source: 
+License: GPL-2.0-or-later
+Type: ipkg
+Description:   This is a small AES-128-CBC encrypton/decryption program.
+  Even though it can be used for regular encryption and
+  decryption operations using AES-128-CBC, it is included
+  here to unencrypt the configuration from mtd on Arcadyan
+  WG430223 and WG443223 routers.
+Eneas U de Queiroz <cotequeiroz@gmail.com>
+@@
+Config:
+  if PACKAGE_uencrypt
+    choice
+	prompt "Crypto provider"
+	default UENCRYPT_WOLFSSL
+
+	config UENCRYPT_OPENSSL
+	bool "OpenSSL"
+
+	config UENCRYPT_WOLFSSL
+	bool "wolfSSL"
+    endchoice
+  endif
+@@
+
+

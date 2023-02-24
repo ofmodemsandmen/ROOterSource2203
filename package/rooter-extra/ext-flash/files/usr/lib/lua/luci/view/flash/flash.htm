@@ -1,0 +1,138 @@
+<%+header%>
+
+<script type="text/javascript" src="<%=resource%>/xhr.js"></script>
+<script type="text/javascript">//<![CDATA[
+	
+	var randm;
+	XHR.get('<%=luci.dispatcher.build_url("admin", "adminmenu", "getflash")%>', null,
+		function(x, rv)
+		{
+			document.getElementById('appt').value = rv.time;
+			document.getElementById('ip').value = rv.server;
+			randm = rv.random;
+			if ( randm == '0' )
+			{
+				document.getElementById('randbtn').value = "<%:Disable Random Time%>";
+			}
+			else
+			{
+				document.getElementById('randbtn').value = "<%:Enable Random Time%>";
+			}
+		}
+	);
+	function ValidateIPaddress(ipaddress) 
+	{  
+		if (/^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(ipaddress)) {  
+			return true;  
+		}  
+		return false; 
+	}
+
+	function tset() {
+		tim = document.getElementById('appt').value;
+		if ( tim == "")
+		{
+			alert("<%:Must Select Time%>");
+			return false;
+		}
+		XHR.get('<%=luci.dispatcher.build_url("admin", "adminmenu", "settime")%>',
+			{ set: tim },
+			function()
+			{
+				alert("<%:Start Time has been set to %>" + tim);
+			}
+		);
+		return true;
+	}  
+
+	function serveripchge()
+	{
+		tim = document.getElementById('ip').value;
+		if ( tim == "")
+		{
+			alert("<%:No IP Address%>");
+			return false;
+		}
+		valid = ValidateIPaddress(tim);
+		if ( valid == true)
+		{
+			XHR.get('<%=luci.dispatcher.build_url("admin", "adminmenu", "setip")%>',
+				{ set: tim },
+				function()
+				{
+					alert("<%:IP Address has been set to %>" + tim);
+				}
+			);
+			return true;
+		}
+		else
+		{
+			alert("<%:Invalid IP Address %>" + tim);
+			return false;
+		}
+		
+	}
+	
+	function randset()
+	{
+		if ( randm == '0' )
+		{
+			randm = '1';
+			document.getElementById('randbtn').value = "<%:Enable Random Time%>";
+		}
+		else
+		{
+			randm = '0';
+			document.getElementById('randbtn').value = "<%:Disable Random Time%>";
+		}
+		XHR.get('<%=luci.dispatcher.build_url("admin", "adminmenu", "setrandom")%>',
+			{ set: randm },
+			function()
+			{
+			}
+		);
+	}
+
+//]]></script>
+
+<form method="post" action="<%=REQUEST_URI%>">
+<div class="cbi-map" id="cbi-modem">
+<h2><a id="content" name="content"><%:Automatic Update%></a></h2>
+<div class="cbi-map-descr"> </div>
+<head>
+	
+</head>
+
+<fieldset>
+	<h2>Upgrade Check Time</h2>
+	<table width="440"  border="0">
+		<tr>
+			<td width="8%">&nbsp;</td>
+			<td width="15%">
+				<input type="time" id="appt" style="font-size : 18px; width: 150px; height: 40px;border-style:double">
+			</td>
+			<td width="10%"><input type="button" id="timebtn" class="cbi-button cbi-button-apply" value="<%:Set Time%>" onclick="return tset()" /></td>
+			<td width="5%">&nbsp;</td>
+			<td width="10%"><input type="button" id="randbtn" class="cbi-button cbi-button-apply" value="<%:Disable Random Time%>" onclick="return randset()" /></td>
+			
+			<td width="52%">&nbsp;</td>
+		</tr>
+	</table>
+</fieldset>
+
+<fieldset>
+	<h2>Server IP Address</h2>
+	<table width="440"  border="0">
+		<tr>
+			<td width="8%">&nbsp;</td>
+			<td width="15%" ><input style="font-size : 18px;width: 175px;maxlength="30" type="text" name="ip" id="ip" class="cbi-input-text"></input>
+			</td>
+			<td width="10%"><input type="button" id="serverbtn" class="cbi-button cbi-button-apply" value="<%:Change Server IP%>" onclick="return serveripchge()" /></td>
+			<td width="67%">&nbsp;</td>
+		</tr>
+	</table>
+</fieldset>
+
+</div>
+</form>
+<%+footer%>

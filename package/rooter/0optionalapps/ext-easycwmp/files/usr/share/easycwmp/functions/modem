@@ -1,0 +1,219 @@
+#!/bin/sh
+. /usr/share/libubox/jshn.sh
+# Copyright (C) 2016 MOHAMED Kallel <mohamed.kallel@yahoo.fr>
+
+#common_execute_method_param "$parameter" "$permission" "$get_cmd" "$set_cmd" "xsd:$type" "$forcedinform"
+#  $forcedinform should be set to 1 if the parameter is included in the inform message otherwise empty
+#  Default of $type = string
+
+#############################
+#   Entry point functions   #
+#############################
+
+
+prefix_list="$prefix_list $DMROOT.Modem."
+entry_execute_method_list="$entry_execute_method_list entry_execute_method_root_Modem"
+
+entry_execute_method_root_Modem() {
+	case "$1" in ""|"$DMROOT."|"$DMROOT.Modem."*)
+		common_execute_method_obj "$DMROOT.Modem." "0" "" "" "modem_browse_instances $1"
+		return 0
+		;;
+	esac
+	return $E_INVALID_PARAMETER_NAME;
+}
+
+sub_entry_ModemList() {
+	local j="$2"
+	local alist="$3"
+	case_param "$1" belongto "$DMROOT.Modem.$j." && {
+		common_execute_method_obj "$DMROOT.Modem.$j." "0"
+		common_execute_method_param  "$DMROOT.Modem.$j.Status" "0" "modem_get_status $alist"
+		common_execute_method_param  "$DMROOT.Modem.$j.Provider" "0" "modem_get_provider $alist"
+		common_execute_method_param  "$DMROOT.Modem.$j.Network" "0" "modem_get_network $alist"
+		common_execute_method_param  "$DMROOT.Modem.$j.Signal" "0" "modem_get_signal $alist"
+		common_execute_method_param  "$DMROOT.Modem.$j.RSSI" "0" "modem_get_rssi $alist"
+		common_execute_method_param  "$DMROOT.Modem.$j.RSRQ" "0" "modem_get_rsrq $alist"
+		common_execute_method_param  "$DMROOT.Modem.$j.RSRP" "0" "modem_get_rsrp $alist"
+		common_execute_method_param  "$DMROOT.Modem.$j.Band" "0" "modem_get_band $alist"
+		common_execute_method_param  "$DMROOT.Modem.$j.Channel" "0" "modem_get_channel $alist"
+		common_execute_method_param  "$DMROOT.Modem.$j.PCI" "0" "modem_get_pci $alist"
+		common_execute_method_param  "$DMROOT.Modem.$j.Cell" "0" "modem_get_cell $alist"
+		common_execute_method_param  "$DMROOT.Modem.$j.Modem" "0" "modem_get_modem $alist"
+		common_execute_method_param  "$DMROOT.Modem.$j.SINR" "0" "modem_get_sinr $alist"
+		common_execute_method_param  "$DMROOT.Modem.$j.ICCID" "0" "modem_get_iccid $alist"
+		return 0
+	}
+	return $E_INVALID_PARAMETER_NAME;		
+}
+
+modem_get_max_instance() {
+	local max=`$UCI_SHOW  modeinfo | grep "modem_instance" | cut -d'=' -f2 | sed 's/[^0-9]*//g' | sort -nru | head -1`
+	echo ${max:-0}
+}
+
+modem_update_instance() {
+	local host="$1"
+	local instance=`$UCI_GET $host.modem_instance`
+	if [ -z "$instance" ]; then
+		instance=`assoc_get_max_instance`
+		$UCI_SET $host.modem_instance=$((++instance))
+		$UCI_COMMIT
+	fi
+	echo $instance
+}
+
+function readline() {
+	local count=$1
+	local cntr=1
+	local ret="---"
+	while IFS= read -r line
+	do
+		if [ $cntr -eq $count ]; then
+			ret="$line"
+			break
+		fi
+		let "cntr=$cntr + 1"
+	done < /tmp/status$CURRMODEM.file
+	echo "$ret"
+}
+	
+modem_create() {
+	if [ ! -e /etc/config/modeinfo ]; then
+		echo "config global global" > /etc/config/modeinfo
+		echo " " >> /etc/config/modeinfo
+	fi
+	for CURRMODEM in 1 2
+	do
+		EX=$(uci -q get modeinfo.modei$CURRMODEM)
+		if [ -z $EX ]; then
+			uci set modeinfo.modei$CURRMODEM='modei'
+		fi
+		EM=$(uci -q get modem.modem$CURRMODEM.empty)
+		if [ $EM -eq 1 ]; then
+			uci set modeinfo.modei$CURRMODEM.status='No Modem present'
+		else
+			EM=$(uci -q get modem.modem$CURRMODEM.connected)
+			if [ $EM -eq 1 ]; then
+				uci set modeinfo.modei$CURRMODEM.status='Connected'
+			else
+				uci set modeinfo.modei$CURRMODEM.status='Not connected'
+			fi
+		fi
+		uci set modeinfo.modei$CURRMODEM.provider="$(readline 6)"
+		uci set modeinfo.modei$CURRMODEM.network="$(readline 7)"
+		uci set modeinfo.modei$CURRMODEM.signal="$(readline 3)"
+		uci set modeinfo.modei$CURRMODEM.rssi="$(readline 4)"
+		uci set modeinfo.modei$CURRMODEM.rsrq="$(readline 18)"
+		uci set modeinfo.modei$CURRMODEM.rsrp="$(readline 19)"
+		uci set modeinfo.modei$CURRMODEM.band="$(readline 29)"
+		uci set modeinfo.modei$CURRMODEM.channel="$(readline 26)"
+		uci set modeinfo.modei$CURRMODEM.pci="$(readline 32)"
+		uci set modeinfo.modei$CURRMODEM.cell="$(readline 10)"
+		uci set modeinfo.modei$CURRMODEM.modem="Modem#"$CURRMODEM
+		uci set modeinfo.modei$CURRMODEM.model="$(readline 5)"
+		uci set modeinfo.modei$CURRMODEM.sinr="$(readline 33)"
+		uci set modeinfo.modei$CURRMODEM.modem_instance=$CURRMODEM
+		uci set modeinfo.modei$CURRMODEM.iccid=$(uci -q get modeinfo.global.iccid$CURRMODEM)
+		uci commit modeinfo
+	done
+}
+
+modem_browse_instances() {
+	local j=$2
+	#rm -f /etc/config/modeinfo
+	uci delete modeinfo.modei1
+	uci delete modeinfo.modei2
+	uci commit modeinfo
+	modem_create
+	local mode modes=`$UCI_SHOW  modeinfo | grep "modeinfo\..*=modei" | cut -d "=" -f 1`
+	for mode in $modes; do
+		local j=`modem_update_instance $mode`
+		sub_entry_ModemList  "$1" "$j" "$mode"
+	done
+}
+
+modem_get_status() {
+	local stat=`$UCI_GET $1.status`
+	echo "$stat"
+}
+
+modem_get_provider() {
+	local prov=`$UCI_GET $1.provider`
+	echo "$prov"
+}
+
+modem_get_network() {
+	local net=`$UCI_GET $1.network`
+	echo "$net"
+}
+
+modem_get_rssi() {
+	local rssi=`$UCI_GET $1.rssi`
+	echo "$rssi"
+}
+
+modem_get_band() {
+	local band=`$UCI_GET $1.band`
+	band="${band/<br />/ }"
+	echo "$band"
+}
+
+modem_get_modem() {
+	local modem=`$UCI_GET $1.modem`
+	echo "$modem"
+}
+
+modem_get_sinr() {
+	local sinr=`$UCI_GET $1.sinr`
+	sinr="${sinr/<br />/ }"
+	echo "$sinr"
+}
+
+modem_get_rsrq() {
+	local sinr=`$UCI_GET $1.rsrq`
+	if [ "$sinr" = "-" ]; then
+		echo "$sinr"
+	else
+		sinr="${sinr/<br />/ }"
+		echo "$sinr dB"
+	fi
+}
+
+modem_get_rsrp() {
+	local sinr=`$UCI_GET $1.rsrp`
+	if [ "$sinr" = "-" ]; then
+		echo "$sinr"
+	else
+		sinr="${sinr/<br />/ }"
+		echo "$sinr dBm"
+	fi
+}
+
+modem_get_channel() {
+	local sinr=`$UCI_GET $1.channel`
+	echo "$sinr"
+}
+
+modem_get_pci() {
+	local sinr=`$UCI_GET $1.pci`
+	echo "$sinr"
+}
+
+modem_get_signal() {
+	local sinr=`$UCI_GET $1.signal`
+	echo "$sinr"
+}
+
+modem_get_cell() {
+	local sinr=`$UCI_GET $1.cell`
+	echo "$sinr"
+}
+
+modem_get_iccid() {
+	local iccid=`$UCI_GET $1.iccid`
+	if [ -z "$iccid" ]; then
+		iccid="-"
+	fi
+	echo "$iccid"
+}

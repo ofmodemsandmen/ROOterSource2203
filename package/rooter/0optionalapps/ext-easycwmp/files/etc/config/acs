@@ -1,0 +1,7 @@
+
+config acs 'acs'
+	option ip '192.169.1.119:7547'
+	option username 'none'
+	option password 'none'
+	option enable '0'
+

@@ -1,0 +1,12 @@
+/dts-v1/;
+
+#include "mt7621_hc952.dtsi"
+
+/ {
+	compatible = "hualink,hc952", "mediatek,mt7621-soc";
+	model = "Hualink,HC952";
+};
+
+&firmware {
+	reg = <0x50000 0x1fb0000>;
+};

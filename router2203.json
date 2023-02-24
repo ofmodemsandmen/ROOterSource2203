@@ -1,0 +1,132 @@
+{
+	"MK01K21": {
+		"details": "Alwaylink MK01K21",
+		"type": "1",
+		"build": "2203",
+		"config": ".config_mk01k21",
+		"package": "ext-mk01k21",
+		"image": "openwrt-ramips-mt7621-mesh_mk01k21-squashfs-sysupgrade.bin",
+		"imagepath": "/ramips/mt7621/",
+		"mod": "Alwaylink-MK01K21",
+		"ext": "-upgrade.bin",
+		"addons": ["uboot.bin", "Flash-MK01K21.pdf", "Factools.exe", "huawen.ttf"],
+		"custom": {
+			"name": {
+				"model": "Alwaylink MK01K21"
+			},
+			"files": "/mk01k21/files/"	
+		}
+	},
+	"WS7915": {
+		"details": "Huasifei WS7915AX",
+		"type": "1",
+		"build": "2203",
+		"package": "ext-huasifei",
+		"config": ".config_ws7915",
+		"image": "openwrt-ramips-mt7621-ws7915-squashfs-sysupgrade.bin",
+		"imagepath": "/ramips/mt7621/",
+		"mod": "Huasifei-WS7915AX",
+		"ext": "-upgrade.bin",
+		"addons": ["readme.pdf"],
+		"custom": {
+			"name": {
+				"model": "WS7915AX",
+				"hostname": "WS7915AX"
+			},
+			"wifi": {
+				"SSID2G": "wifi6-2.4g",
+				"SSID5G": "wifi6-5.8g",
+				"Password": ""
+			},
+			"image": {
+				"Material": "hua.png",
+				"Argon": "hua.png",
+				"Tomato": "hua.png"
+			},
+			"files": "/huasifei/files7915/"	
+		}
+	},
+	"WS1688": {
+		"details": "WS1688AX",
+		"type": "1",
+		"build": "2102",
+		"package": "ext-huasifei",
+		"config": ".config_ws1688",
+		"image": "openwrt-ramips-mt7621-ws1688-squashfs-sysupgrade.bin",
+		"imagepath": "/ramips/mt7621/",
+		"mod": "WS1688AX",
+		"ext": "-upgrade.bin",
+		"addons": ["readme.pdf"],
+		"custom": {
+			"name": {
+				"model": "WS1688AX",
+				"hostname": "WS1688AX"
+			},
+			"wifi": {
+				"SSID2G": "wifi6-2.4g",
+				"SSID5G": "wifi6-5.8g",
+				"Password": ""
+			},
+			"image": {
+				"Material": "hua.png",
+				"Argon": "hua.png",
+				"Tomato": "hua.png"
+			},
+			"files": "/huasifei/files1688/"	
+		}
+	},
+	"WS1688-32": {
+		"details": "WS1688AX-32",
+		"type": "1",
+		"build": "2102",
+		"package": "ext-huasifei",
+		"config": ".config_ws1688-32",
+		"image": "openwrt-ramips-mt7621-ws1688-32-squashfs-sysupgrade.bin",
+		"imagepath": "/ramips/mt7621/",
+		"mod": "WS1688AX-32",
+		"ext": "-upgrade.bin",
+		"addons": ["readme.pdf"],
+		"custom": {
+			"name": {
+				"model": "WS1688AX-32",
+				"hostname": "WS1688AX"
+			},
+			"wifi": {
+				"SSID2G": "wifi6-2.4g",
+				"SSID5G": "wifi6-5.8g",
+				"Password": ""
+			},
+			"image": {
+				"Material": "hua.png",
+				"Argon": "hua.png",
+				"Tomato": "hua.png"
+			},
+			"files": "/huasifei/files1688/"	
+		}
+	},
+	"MOCHABIN": {
+		"details": "Globalscale MOCHAbin",
+		"type": "2",
+		"build": "2203",
+		"config": ".config_mochabin",
+		"image1": "openwrt-mvebu-cortexa72-globalscale_mochabin-initramfs-kernel.bin",
+		"image2": "openwrt-mvebu-cortexa72-globalscale_mochabin-squashfs-sdcard.img.gz",
+		"imagepath": "/mvebu/cortexa72/",
+		"mod": "Globalscale-MOCHAbin",
+		"ext1": "-initramfs-kernel.bin",
+		"ext2": "-sdcard.img.gz",
+		"addons": ["readme.pdf", "mochabin-flash.txt"]
+	},
+	"R4S": {
+		"details": "NanoPi R4S",
+		"type": "1",
+		"build": "2203",
+		"config": ".config_r4s",
+		"package": "ext-mk01k21",
+		"image": "openwrt-rockchip-armv8-friendlyarm_nanopi-r4s-ext4-sysupgrade.img.gz",
+		"imagepath": "/rockchip/armv8/",
+		"mod": "NanoPi-R4S",
+		"ext": "-upgrade.img.gz",
+		"addons": ["readme.pdf", "readmerecovery.txt"]
+	}
+}

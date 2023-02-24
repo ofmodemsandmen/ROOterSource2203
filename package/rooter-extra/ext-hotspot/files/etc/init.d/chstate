@@ -1,0 +1,21 @@
+#!/bin/sh /etc/rc.common
+. /lib/functions.sh
+
+log() {
+	logger -t "WLAN State" "$@"
+}
+
+START=70
+
+start()
+{
+	cstate=$(uci -q get travelmate.global.cstate)
+	log " "
+	log "$cstate"
+	log " "
+	if [ $cstate = "2" ]; then
+		uci set travelmate.global.state='1'
+		uci commit travelmate
+	fi
+
+}

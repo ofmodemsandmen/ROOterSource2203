@@ -1,0 +1,237 @@
+#!/bin/sh
+. /usr/share/libubox/jshn.sh
+# Copyright (C) 2016 MOHAMED Kallel <mohamed.kallel@yahoo.fr>
+
+#common_execute_method_param "$parameter" "$permission" "$get_cmd" "$set_cmd" "xsd:$type" "$forcedinform"
+#  $forcedinform should be set to 1 if the parameter is included in the inform message otherwise empty
+#  Default of $type = string
+
+#############################
+#   Entry point functions   #
+#############################
+
+log() {
+	modlog "TRS069 " "$@"
+}
+
+prefix_list="$prefix_list $DMROOT.Bandwidth."
+entry_execute_method_list="$entry_execute_method_list entry_execute_method_root_Bandwidth"
+
+entry_execute_method_root_Bandwidth() {
+	case "$1" in ""|"$DMROOT."|"$DMROOT.Bandwidth."*)
+		common_execute_method_obj "$DMROOT.Bandwidth." "0" "" "" "bandwidth_browse_instances $1"
+		return 0
+		;;
+	esac
+	return $E_INVALID_PARAMETER_NAME;
+}
+
+sub_entry_BandwidthList() {
+	local j="$2"
+	local alist="$3"
+	case_param "$1" belongto "$DMROOT.Bandwidth.$j." && {
+		common_execute_method_obj "$DMROOT.Bandwidth.$j." "0"
+		common_execute_method_param  "$DMROOT.Bandwidth.$j.Total" "0" "bandwidth_get_total $alist"
+		common_execute_method_param  "$DMROOT.Bandwidth.$j.TotalRaw" "0" "bandwidth_get_totalraw $alist"
+		common_execute_method_param  "$DMROOT.Bandwidth.$j.TotalDwn" "0" "bandwidth_get_totaldwn $alist"
+		common_execute_method_param  "$DMROOT.Bandwidth.$j.TotalUp" "0" "bandwidth_get_totalup $alist"
+		common_execute_method_param  "$DMROOT.Bandwidth.$j.Rollover" "1" "bandwidth_get_rollover $alist" "bandwidth_set_rollover" "xsd:unsignedInt"
+		common_execute_method_param  "$DMROOT.Bandwidth.$j.AllocateAmt" "1" "bandwidth_get_allocateamt $alist" "bandwidth_set_allocateamt $alist" "xsd:unsignedInt"
+		common_execute_method_param  "$DMROOT.Bandwidth.$j.AllocateEnabled" "1" "bandwidth_get_allocenabled $alist" "bandwidth_set_allocenabled" "xsd:boolean"
+		common_execute_method_param  "$DMROOT.Bandwidth.$j.AllocateAction" "1" "bandwidth_get_allocaction $alist" "bandwidth_set_allocaction"
+		common_execute_method_param  "$DMROOT.Bandwidth.$j.AllocateDown" "1" "bandwidth_get_allocdown $alist" "bandwidth_set_allocdown" "xsd:unsignedInt"
+		common_execute_method_param  "$DMROOT.Bandwidth.$j.AllocateUp" "1" "bandwidth_get_allocup $alist" "bandwidth_set_allocup" "xsd:unsignedInt"
+		common_execute_method_param  "$DMROOT.Bandwidth.$j.Status" "0" "bandwidth_get_status $alist"
+		common_execute_method_param  "$DMROOT.Bandwidth.$j.Manual" "1" "bandwidth_get_manual $alist" "bandwidth_set_manual" "xsd:boolean"
+		return 0
+	}
+	return $E_INVALID_PARAMETER_NAME;		
+}
+
+function readbwline() {
+	local count=$1
+	local cntr=1
+	local ret="---"
+	while IFS= read -r line
+	do
+		if [ $cntr -eq $count ]; then
+			ret="$line"
+			break
+		fi
+		let "cntr=$cntr + 1"
+	done < /tmp/bwdata
+	echo "$ret"
+}
+
+bandwidth_browse_instances() {
+	sub_entry_BandwidthList  "$1" "1"
+}
+
+bandwidth_get_total() {
+	local bl="$(readbwline 3)"
+	echo "$bl"
+}
+
+bandwidth_get_totalraw() {
+	local bl="$(readbwline 2)"
+	echo "$bl"
+}
+
+bandwidth_get_totaldwn() {
+	local bl="$(readbwline 5)"
+	echo "$bl"
+}
+
+bandwidth_get_totalup() {
+	local bl="$(readbwline 7)"
+	echo "$bl"
+}
+
+bandwidth_get_rollover() {
+	local bl=$(uci -q get custom.bwallocate.rollover)
+	echo $bl
+}
+
+bandwidth_set_rollover() {
+	uci set custom.bwallocate.rollover=$1
+	uci commit custom
+}
+
+bandwidth_get_allocateamt() {
+	local bl="$(uci -q get custom.bwallocate.allocate)"
+	echo "$bl"
+}
+
+bandwidth_set_allocateamt() {
+	uci set custom.bwallocate.allocate=$1
+	uci commit custom
+	return 0
+}
+
+bandwidth_get_allocenabled() {
+	local bl=$(uci -q get custom.bwallocate.enabled)
+	echo $bl
+}
+
+bandwidth_set_allocenabled() {
+	local val=`echo "$1" | tr '[A-Z]' '[a-z]'`
+	if [ "$val" = "1" -o "$val" = "true" ]; then
+		uci set custom.bwallocate.enabled='1'
+		uci set custom.bwallocate.lock='1'
+	else
+		uci set custom.bwallocate.enabled='0'
+		uci set custom.bwallocate.lock='0'
+	fi
+	uci commit custom
+	return 0
+}
+
+bandwidth_get_allocaction() {
+	local bb="$(uci -q get custom.bwallocate.action)"
+	if [ "$bb" = "0" ]; then
+		echo "Blocked"
+	else
+		if [ "$bb" = "1" ]; then
+			echo "Throttled"
+		else
+			echo "Not Set"
+		fi
+	fi
+}
+
+bandwidth_set_allocaction() {
+	local val=`echo "$1" | tr '[A-Z]' '[a-z]'`
+	if [ "$val" = "blocked" ]; then
+		uci set custom.bwallocate.action='0'
+	else
+		if [ "$val" = "throttled" ]; then
+			uci set custom.bwallocate.action='1'
+		else
+			return $E_INVALID_PARAMETER_VALUE
+		fi
+	fi
+	uci commit custom
+	return 0
+}
+
+bandwidth_get_allocdown() {
+	local bb="$(uci -q get custom.bwallocate.down)"
+	if [ -z "$bb" ]; then
+		uci set custom.bwallocate.down='5'
+		uci commit custom
+		echo "5"
+	else
+		echo "$bb"
+	fi
+}
+
+bandwidth_set_allocdown() {
+	uci set custom.bwallocate.down=$1
+	uci commit custom
+	return 0
+}
+
+bandwidth_get_allocup() {
+	local bb="$(uci -q get custom.bwallocate.up)"
+	if [ -z "$bb" ]; then
+		uci set custom.bwallocate.up='2'
+		uci commit custom
+		echo '2'
+	else
+		echo "$bb"
+	fi
+}
+
+bandwidth_set_allocup() {
+	uci set custom.bwallocate.up=$1
+	uci commit custom
+	return 0
+}
+
+bandwidth_get_status() {
+	local bb="$(uci -q get custom.bwallocate.status)"
+	if [ -z "$bb" ]; then
+		bb="0"
+	fi
+	if [ "$bb" = "0" ]; then
+		bc="Normal"
+	else
+		if [ "$bb" = "1" ]; then
+			bc="Blocked"
+		else
+			if [ "$bb" = "2" ]; then
+				bc="Throttled"
+			else
+				bc="Unknown"
+			fi
+		fi
+	fi
+	echo "$bc"
+}
+
+bandwidth_get_manual() {
+	local bb="$(uci -q get custom.bwallocate.manual)"
+	if [ -z "$bb" ]; then
+		bb="0"
+	fi
+	echo "$bb"
+}
+
+bandwidth_set_manual() {
+	uci set custom.bwallocate.manual=$1
+	uci commit custom
+	local val=`echo "$1" | tr '[A-Z]' '[a-z]'`
+	if [ "$val" = "1" -o "$val" = "true" ]; then
+		if [ -e /etc/nodogsplash/control ]; then
+			/etc/nodogsplash/control block
+		else
+			/usr/lib/bwmon/block 1
+		fi
+	else
+		if [ -e /etc/nodogsplash/control ]; then
+			/etc/nodogsplash/control unblock
+		fi
+		/usr/lib/bwmon/block 0
+	fi
+	return 0
+}

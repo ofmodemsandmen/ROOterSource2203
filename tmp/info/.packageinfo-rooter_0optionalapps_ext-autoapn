@@ -1,0 +1,21 @@
+Source-Makefile: package/rooter/0optionalapps/ext-autoapn/Makefile
+
+Package: ext-autoapn
+Submenu: Optional Applications
+Version: 1.000-1
+Depends: +libc +USE_GLIBC:librt +USE_GLIBC:libpthread 
+Conflicts: 
+Menu-Depends: 
+Provides: 
+Section: utils
+Category: ROOter
+Repository: base
+Title: support for Automatic APN
+Maintainer: Created by DM/makefile by Cobia@whirlpool
+Source: 
+Type: ipkg
+Description:   Helper scripts to enable Automatic APN
+Created by DM/makefile by Cobia@whirlpool
+@@
+
+

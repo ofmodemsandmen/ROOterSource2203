@@ -1,0 +1,21 @@
+Source-Makefile: package/rooter-custom-builds/Parts/build-luci/Makefile
+
+Package: build-luci
+Submenu: BuildSections
+Version: 1.000-1
+Depends: +libc +USE_GLIBC:librt +USE_GLIBC:libpthread +luci +luci-compat +ca-bundle +ca-certificates +libustream-wolfssl +464xlat
+Conflicts: 
+Menu-Depends: 
+Provides: 
+Section: utils
+Category: ROOter
+Repository: base
+Title: Luci packages
+Maintainer: Created by DM/makefile by Cobia@whirlpool
+Source: 
+Type: ipkg
+Description: Luci packages
+Created by DM/makefile by Cobia@whirlpool
+@@
+
+
