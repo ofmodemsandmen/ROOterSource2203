@@ -1,0 +1,27 @@
+#!/bin/sh
+
+log() {
+	logger -t "Button Checker " "$@"
+}
+
+log "Button Name : $BUTTON     Action : $ACTION"
+
+if [ $BUTTON = "BTN_0" -a $ACTION = "released" ]; then
+	if [ -e /tmp/toplite ]; then
+		rm -f /tmp/toplite
+		# blue off
+		echo none > /sys/class/leds/top:5gblue/trigger
+		echo 1  > /sys/class/leds/top:5gblue/brightness
+		# red off
+		echo none > /sys/class/leds/top:5gred/trigger
+		echo 0  > /sys/class/leds/top:5gred/brightness
+	else
+		echo "0" > /tmp/toplite
+		# blue off
+		echo none > /sys/class/leds/top:5gblue/trigger
+		echo 0  > /sys/class/leds/top:5gblue/brightness
+		# red on
+		echo none > /sys/class/leds/top:5gred/trigger
+		echo 1  > /sys/class/leds/top:5gred/brightness
+	fi
+fi
