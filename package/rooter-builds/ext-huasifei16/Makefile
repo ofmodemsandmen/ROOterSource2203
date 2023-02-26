@@ -16,7 +16,7 @@ define Package/ext-huasifei16
   DEPENDS:=+luci +ext-rooter-basic +pingtest +ext-blacklist +ext-blockport \
   		+extramenu +bwallocate +ext-domain +ext-zerotier \
   		+luci-app-mwan3 +luci-app-dnsmasq-ipset \
-		+luci-app-ddns +ddns-scripts \
+		+luci-app-ddns +ddns-scripts +ext-simplegps \
 		+luci-app-rootervpn +ext-wireguard \
 		+webconsole +bwmon +464xlat \
 		+iptables-mod-hashlimit \
