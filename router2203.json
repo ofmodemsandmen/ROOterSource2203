@@ -128,5 +128,39 @@
 		"mod": "NanoPi-R4S",
 		"ext": "-upgrade.img.gz",
 		"addons": ["readme.pdf", "readmerecovery.txt"]
+	},
+	"HC952": {
+		"details": "Huastlink HC952",
+		"type": "1",
+		"build": "2203",
+		"config": ".config_hc952",
+		"image": "openwrt-ramips-mt7621-hc952-squashfs-sysupgrade.bin",
+		"imagepath": "/ramips/mt7621/",
+		"mod": "Huastlink-HC952",
+		"ext": "-upgrade.bin",
+		"addons": ["uboot16.bin", "HC952841-Flash.pdf"],
+		"custom": {
+			"name": {
+				"model": "Huastlink HC952"
+			}
+		},
+		"files": "/hc952/files/"	
+	},
+	"HC841": {
+		"details": "Huastlink HC841",
+		"type": "1",
+		"build": "2203",
+		"config": ".config_hc841",
+		"image": "openwrt-ramips-mt7621-hc841-squashfs-sysupgrade.bin",
+		"imagepath": "/ramips/mt7621/",
+		"mod": "Huastlink-HC841",
+		"ext": "-upgrade.bin",
+		"addons": ["uboot16.bin", "HC952841-Flash.pdf"],
+		"custom": {
+			"name": {
+				"model": "Huastlink HC841"
+			},
+			"files": "/hc952/files/"
+		}
 	}
 }
