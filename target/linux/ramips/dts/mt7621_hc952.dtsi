@@ -18,7 +18,7 @@
 		led-failsafe = &led_status;
 		led-running = &led_status;
 		led-upgrade = &led_status;
-		label-mac-device = &wan_port;
+		label-mac-device = &gmac0;
 	};
 
 	chosen {
@@ -132,6 +132,18 @@
 			factory: partition@40000 {
 				label = "factory";
 				reg = <0x40000 0x10000>;
+				
+				compatible = "nvmem-cells";
+				#address-cells = <1>;
+				#size-cells = <1>;
+
+				macaddr_factory_e000: macaddr@e000 {
+					reg = <0xe000 0x6>;
+				};
+
+				macaddr_factory_e006: macaddr@e006 {
+					reg = <0xe006 0x6>;
+				};
 			};
 
 			firmware: partition@50000 {
@@ -165,19 +177,27 @@
 };
 
 &gmac0 {
-	nvmem-cells = <&macaddr_factory_4>;
+	nvmem-cells = <&macaddr_factory_e000>;
 	nvmem-cell-names = "mac-address";
+};
+
+&gmac1 {
+	status = "okay";
+	label = "wan";
+	phy-handle = <&ethphy4>;
+
+	nvmem-cells = <&macaddr_factory_e006>;
+	nvmem-cell-names = "mac-address";
+};
+
+&mdio {
+	ethphy4: ethernet-phy@4 {
+		reg = <4>;
+	};
 };
 
 &switch0 {
 	ports {
-		wan_port: port@4 {
-			status = "okay";
-			label = "wan";
-			nvmem-cells = <&macaddr_factory_4>;
-			nvmem-cell-names = "mac-address";
-			mac-address-increment = <(-2)>;
-		};
 
 		port@1 {
 			status = "okay";
@@ -196,13 +216,9 @@
 	};
 };
 
-&ethernet {
-	pinctrl-0 = <&mdio_pins>, <&rgmii1_pins>;
-};
-
 &state_default {
 	gpio {
-		groups = "rgmii2", "jtag", "wdt", "i2c";
+		groups = "jtag", "wdt", "i2c";
 		function = "gpio";
 	};
 };
@@ -212,7 +228,7 @@
 	#address-cells = <1>;
 	#size-cells = <1>;
 
-	macaddr_factory_4: macaddr@4 {
-		reg = <0x4 0x6>;
+	macaddr_factory_e000: macaddr@e000 {
+		reg = <0xe000 0x6>;
 	};
 };
