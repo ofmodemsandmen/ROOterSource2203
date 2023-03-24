@@ -13,7 +13,7 @@ include $(INCLUDE_DIR)/package.mk
 define Package/ext-mk01k21
   SECTION:=utils
   CATEGORY:=ROOter
-  DEPENDS:=+luci +ext-rooter-basic +pingtest \
+  DEPENDS:=+luci +ext-rooter-basic +pingtest +ext-logo \
   		+extramenu +ext-blacklist +ext-blockport +ext-domain \
 		+luci-app-ddns +ddns-scripts +httping +curl \
 		+luci-app-rootervpn +ext-wireguard \
