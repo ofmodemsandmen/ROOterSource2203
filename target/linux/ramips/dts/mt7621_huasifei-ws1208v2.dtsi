@@ -109,7 +109,7 @@
 	wifi@0,0 {
 		compatible = "pci14c3,7603";
 		reg = <0x0000 0 0 0 0>;
-		mediatek,mtd-eeprom = <&factory 0x0028>;
+		mediatek,mtd-eeprom = <&factory 0x0000>;
 		nvmem-cells = <&macaddr_config_0028>;
 		nvmem-cell-names = "mac-address";
 	};
@@ -119,7 +119,7 @@
 	wifi@0,0 {
 		compatible = "pci14c3,7662";
 		reg = <0x0000 0 0 0 0>;
-		mediatek,mtd-eeprom = <&factory 0x002E>;
+		mediatek,mtd-eeprom = <&factory 0x8000>;
 		nvmem-cells = <&macaddr_config_0028>;
 		nvmem-cell-names = "mac-address";
 		mac-address-increment = <1>;
