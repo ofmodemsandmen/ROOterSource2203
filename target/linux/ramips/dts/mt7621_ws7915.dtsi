@@ -120,14 +120,6 @@
 				compatible = "nvmem-cells";
 				#address-cells = <1>;
 				#size-cells = <1>;
-
-				macaddr_factory_e000: macaddr@e000 {
-					reg = <0xe000 0x6>;
-				};
-
-				macaddr_factory_e006: macaddr@e006 {
-					reg = <0xe006 0x6>;
-				};
 			};
 
 			firmware: partition@50000 {
@@ -145,13 +137,17 @@
 &pcie1 {
 	wifi@0,0 {
 		reg = <0x0 0 0 0 0>;
-		mediatek,mtd-eeprom = <&factory 0x0>;
+		mediatek,mtd-eeprom = <&factory 0x00>;
+		nvmem-cells = <&macaddr_factory_004>;
+		nvmem-cell-names = "mac-address";
+		mac-address-increment = <1>;
 	};
 };
 
 &gmac0 {
-	nvmem-cells = <&macaddr_factory_e000>;
+	nvmem-cells = <&macaddr_factory_004>;
 	nvmem-cell-names = "mac-address";
+	mac-address-increment = <3>;
 };
 
 &gmac1 {
@@ -159,8 +155,9 @@
 	label = "wan";
 	phy-handle = <&ethphy4>;
 
-	nvmem-cells = <&macaddr_factory_e006>;
+	nvmem-cells = <&macaddr_factory_004>;
 	nvmem-cell-names = "mac-address";
+	mac-address-increment = <4>;
 };
 
 &mdio {
@@ -206,7 +203,7 @@
 	#address-cells = <1>;
 	#size-cells = <1>;
 
-	macaddr_factory_e000: macaddr@e000 {
-		reg = <0xe000 0x6>;
+	macaddr_factory_004: macaddr@004 {
+		reg = <0x004 0x6>;
 	};
 };
