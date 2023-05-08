@@ -458,5 +458,32 @@
 			},
 			"files": "/huasifei/files1208/"	
 		}
+	},
+	"WS1208V2-32": {
+		"details": "Huasifei WS1208V2-32",
+		"type": "1",
+		"package": "ext-huasifei",
+		"config": ".config_ws1208v2-32",
+		"image": "openwrt-ramips-mt7621-huasifei-ws1208v2-32-squashfs-sysupgrade.bin",
+		"imagepath": "/ramips/mt7621/",
+		"mod": "Huasifei-WS1208V2-32",
+		"ext": "-upgrade.bin",
+		"custom": {
+			"name": {
+				"model": "WS1208V2-32",
+				"hostname": "WS1208V2-32"
+			},
+			"wifi": {
+				"SSID2G": "wifi-2.4g",
+				"SSID5G": "wifi-5.8g",
+				"Password": "12345678"
+			},
+			"image": {
+				"Material": "hua.png",
+				"Argon": "hua.png",
+				"Tomato": "hua.png"
+			},
+			"files": "/huasifei/files1208/"	
+		}
 	}
 }
