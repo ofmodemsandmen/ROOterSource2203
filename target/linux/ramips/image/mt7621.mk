@@ -2362,6 +2362,19 @@ define Device/huasifei-ws1208v2
 endef
 TARGET_DEVICES += huasifei-ws1208v2
 
+define Device/huasifei-ws1208v2-32
+  $(Device/dsa-migration)
+  SUPPORTED_DEVICES += huasifei-ws1208v2-32
+  IMAGE_SIZE := 32448k
+  DEVICE_VENDOR := Huasifei
+  DEVICE_MODEL := WS1208v2-32
+  DEVICE_VARIANT := 32M
+  DEVICE_PACKAGES := \
+	kmod-ata-core kmod-ata-ahci kmod-sdhci-mt7620 kmod-mt7603 kmod-mt76x2 \
+	kmod-usb3 kmod-usb-ledtrig-usbport wpad
+endef
+TARGET_DEVICES += huasifei-ws1208v2-32
+
 define Device/beeline_smartbox-giga
   $(Device/dsa-migration)
   $(Device/uimage-lzma-loader)

@@ -161,6 +161,7 @@ huasifei,ws7915)
 	ucidef_set_led_netdev "wlan2g" "wlan2g" "wlan0" "wlan0" "link tx rx"
 	ucidef_set_led_netdev "wlan5g" "wlan5g" "wlan1" "wlan1" "link tx rx"
 	;;
+huasifei,huasifei-ws1208v2-32|\
 huasifei,huasifei-ws1208v2)
 	ucidef_set_led_netdev "wlan2g" "wlan2g" "wifi24" "wlan0" "link tx rx"
 	ucidef_set_led_netdev "wlan5g" "wlan5g" "wifi" "wlan1" "link tx rx"

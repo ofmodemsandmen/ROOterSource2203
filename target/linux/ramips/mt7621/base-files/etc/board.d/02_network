@@ -182,6 +182,7 @@ ramips_setup_macs()
 		;;
 	jcg,y2|\
 	huasifei-ws1208v2|\
+	huasifei-ws1208v2-32|\
 	wavlink,wl-wn531a6|\
 	wavlink,wl-wn533a8|\
 	winstars,ws-wn583a6|\
