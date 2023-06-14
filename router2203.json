@@ -142,9 +142,9 @@
 		"custom": {
 			"name": {
 				"model": "Huastlink HC952"
-			}
-		},
-		"files": "/hc952/files/"	
+			},
+			"files": "/hc952/files/"
+		}	
 	},
 	"HC841": {
 		"details": "Huastlink HC841",
