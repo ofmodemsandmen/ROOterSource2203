@@ -153,12 +153,12 @@
 		"config": ".config_hc841",
 		"image": "openwrt-ramips-mt7621-hc841-squashfs-sysupgrade.bin",
 		"imagepath": "/ramips/mt7621/",
-		"mod": "Huastlink-HC841",
+		"mod": "Huastlink-HC851-HC841",
 		"ext": "-upgrade.bin",
 		"addons": ["uboot16.bin", "HC952841-Flash.pdf"],
 		"custom": {
 			"name": {
-				"model": "Huastlink HC841"
+				"model": "Huastlink HC851/HC841"
 			},
 			"files": "/hc952/files/"
 		}
