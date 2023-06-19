@@ -157,7 +157,7 @@ detect_mac80211() {
 		channel=""
 		htmode=""
 		ht_capab=""
-
+		wphy="$dev"
 		get_band_defaults "$dev"
 
 		path="$(iwinfo nl80211 path "$dev")"
@@ -206,6 +206,7 @@ detect_mac80211() {
 			set wireless.radio${devidx}.disabled=0
 			set wireless.radio${devidx}.noscan=0
 			set wireless.radio${devidx}.country='US'
+			set wireless.radio${devidx}.phy="$wphy"
 
 			set wireless.default_radio${devidx}=wifi-iface
 			set wireless.default_radio${devidx}.device=radio${devidx}
