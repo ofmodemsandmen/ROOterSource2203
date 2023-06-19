@@ -250,7 +250,7 @@ return view.extend({
 					]));
 					opts.keep[0].disabled = true;
 				} else {
-					opts.keep[0].checked = true;
+					opts.keep[0].checked = false;
 
 					if (has_rootfs_data) {
 						body.push(E('p', {}, E('label', { 'class': 'btn' }, [
@@ -326,7 +326,9 @@ return view.extend({
 			/* if checkbox == condition add args to sysupgrade */
 			if (opts[key][0].checked == opts[key][1])
 				args.push(opts[key][2]);
-
+			
+		//fs.exec('tar -czf /tmp/zerotier.tar.gz /etc/config/zerotier');
+		//args.push('-f /tmp/zerotier.tar.gz');
 		args.push('/tmp/firmware.bin');
 
 		/* Currently the sysupgrade rpc call will not return, hence no promise handling */
