@@ -310,8 +310,8 @@ msgstr "Festes Intervall"
 #: applications/luci-app-nlbwmon/htdocs/luci-static/resources/view/nlbw/display.js:852
 #: applications/luci-app-nlbwmon/htdocs/luci-static/resources/view/nlbw/display.js:898
 #: applications/luci-app-nlbwmon/htdocs/luci-static/resources/view/nlbw/display.js:945
-msgid "Force reload…"
-msgstr "Neu Laden erzwingen…"
+msgid "Refresh Statistics…"
+msgstr "Statistiken aktualisieren"
 
 #: applications/luci-app-nlbwmon/htdocs/luci-static/resources/view/nlbw/config.js:59
 msgid "General Settings"
@@ -413,16 +413,16 @@ msgstr ""
 "unbeschränkt."
 
 #: applications/luci-app-nlbwmon/htdocs/luci-static/resources/view/nlbw/display.js:806
-msgid "Netlink Bandwidth Monitor"
-msgstr "Netlink-Bandbreitenmonitor"
+msgid "Usage Statistics"
+msgstr "Nutzungsstatistiken"
 
 #: applications/luci-app-nlbwmon/htdocs/luci-static/resources/view/nlbw/backup.js:51
-msgid "Netlink Bandwidth Monitor - Backup / Restore"
-msgstr "Netlink-Bandbreitenmonitor - Sichern/Wiederherstellen"
+msgid " Backup / Restore"
+msgstr "Sichern/Wiederherstellen"
 
 #: applications/luci-app-nlbwmon/htdocs/luci-static/resources/view/nlbw/config.js:52
-msgid "Netlink Bandwidth Monitor - Configuration"
-msgstr "Netlink-Bandbreitenmonitor - Konfiguration"
+msgid "Configuration"
+msgstr "Konfiguration"
 
 #: applications/luci-app-nlbwmon/htdocs/luci-static/resources/view/nlbw/display.js:362
 #: applications/luci-app-nlbwmon/htdocs/luci-static/resources/view/nlbw/display.js:416
