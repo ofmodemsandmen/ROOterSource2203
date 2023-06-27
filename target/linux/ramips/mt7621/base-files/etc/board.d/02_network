@@ -67,6 +67,9 @@ ramips_setup_interfaces()
 	xiaomi,mi-router-4a-gigabit)
 		ucidef_set_interfaces_lan_wan "lan1 lan2" "wan"
 		;;
+	dualq-h721-256m-16m)
+		ucidef_set_interfaces_lan "lan1 lan2 lan3 lan4"
+		;;
 	bolt,arion)
 		ucidef_set_interfaces_lan_wan "lan" "wan"
 		ucidef_set_interface "eth_data" device "modem.103" protocol "static" ipaddr "10.22.127.222" netmask "255.255.255.255"
