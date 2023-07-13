@@ -496,5 +496,13 @@
 		"mod": "Gl.iNet-MT1300",
 		"ext": "-upgrade.bin",
 		"addons": ["readme.pdf", "glinet.txt"]
+	},
+	"Z2101AX": {
+		"type": "1",
+		"config": ".config_z2101ax",
+		"imagepath": "/ramips/mt7621/",
+		"mod": "Z2101AX",
+		"image": "openwrt-ramips-mt7621-zbliink_zbt-z2101ax-squashfs-sysupgrade.bin",
+		"ext": "-upgrade.bin"
 	}
 }

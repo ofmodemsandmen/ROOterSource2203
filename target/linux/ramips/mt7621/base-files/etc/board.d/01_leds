@@ -168,6 +168,11 @@ huasifei,huasifei-ws1208v2)
 	ucidef_set_led_netdev "wwan0" "wwan0" "green:4g5g" "wwan0" "link tx rx"
 	ucidef_set_led_usbport "usb" "USB" "usb" "1-2-port1"
 	;;
+zbt,z2101ax)
+	ucidef_set_led_netdev "blue" "wlan2g" "wlan" "wlan0" "link tx rx"
+	ucidef_set_led_netdev "wlan5g" "wlan5g" "wlan" "wlan1" "link tx rx"
+	ucidef_set_led_netdev "wwan0" "wwan0" "blue" "wwan0" "link tx rx"
+	;;
 esac
 
 board_config_flush

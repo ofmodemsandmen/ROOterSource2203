@@ -2478,3 +2478,15 @@ define Device/ws1688-32
   SUPPORTED_DEVICES += ws1688-32 huasifei,ws1688-32
 endef
 TARGET_DEVICES += ws1688-32
+
+define Device/zbliink_zbt-z2101ax
+  $(Device/dsa-migration)
+  DEVICE_VENDOR := ZBT
+  DEVICE_MODEL := Z2101AX
+  DEVICE_DTS_CONFIG := config@1
+  DEVICE_PACKAGES += kmod-mt7915e kmod-usb3
+  KERNEL := kernel-bin | lzma | fit lzma $$(KDIR)/image-$$(firstword $$(DEVICE_DTS)).dtb
+  IMAGE_SIZE := 15808k
+  SUPPORTED_DEVICES += zbliink_zbt-Z2101ax
+endef
+TARGET_DEVICES += zbliink_zbt-z2101ax
