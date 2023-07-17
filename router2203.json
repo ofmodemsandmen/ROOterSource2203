@@ -262,6 +262,18 @@
 		"ext": "-upgrade.bin",
 		"addons": ["readme.pdf", "readmerecovery.txt"]
 	},
+	"H721AX": {
+		"details": "DualQ H721AX",
+		"type": "1",
+		"build": "2203",
+		"config": ".config_h721ax",
+		"package": "ext-mk01k21",
+		"image": "openwrt-ramips-mt7621-dual-q_h721-squashfs-sysupgrade.bin",
+		"imagepath": "/ramips/mt7621/",
+		"mod": "DualQ-H721AX",
+		"ext": "-upgrade.bin",
+		"addons": ["readme.pdf", "readmerecovery.txt"]
+	},
 	"X86-32": {
 		"details": "Generic x86 32 bit",
 		"type": "4",
