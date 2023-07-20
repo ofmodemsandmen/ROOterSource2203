@@ -1,0 +1,12 @@
+// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
+
+#include "mt7621_x721.dtsi"
+
+/ {
+	compatible = "huasifei,x721", "huasifei,x721", "mediatek,mt7621-soc";
+	model = "Huasifei X721";
+};
+
+&firmware {
+	reg = <0x50000 0xfb0000>;
+};

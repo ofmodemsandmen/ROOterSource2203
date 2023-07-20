@@ -173,6 +173,9 @@ zbt,z2101ax)
 	ucidef_set_led_netdev "wlan5g" "wlan5g" "wlan" "wlan1" "link tx rx"
 	ucidef_set_led_netdev "wwan0" "wwan0" "blue" "wwan0" "link tx rx"
 	;;
+huasifei,x721)
+	ucidef_set_led_netdev "wwan0" "wwan0" "lte" "wwan0" "link tx rx"
+	;;
 esac
 
 board_config_flush

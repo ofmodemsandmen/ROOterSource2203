@@ -2490,3 +2490,17 @@ define Device/zbliink_zbt-z2101ax
   SUPPORTED_DEVICES += zbliink_zbt-Z2101ax
 endef
 TARGET_DEVICES += zbliink_zbt-z2101ax
+
+define Device/x721
+  $(Device/dsa-migration)
+  $(Device/uimage-lzma-loader)
+  IMAGE_SIZE := 16064k
+  DEVICE_VENDOR := Huasifei
+  DEVICE_MODEL := X721
+  DEVICE_VARIANT := 16M
+  DEVICE_PACKAGES := kmod-ata-ahci kmod-sdhci-mt7620 kmod-usb3 \
+		kmod-usb-ledtrig-usbport \
+		kmod-mt7915e kmod-mt76 -wpad-wolfssl
+  SUPPORTED_DEVICES += x721 huasifei,x721
+endef
+TARGET_DEVICES += x721
