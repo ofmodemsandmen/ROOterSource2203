@@ -527,5 +527,16 @@
 		"mod": "GL-AR300M-16",
 		"ext": "-upgrade.bin",
 		"addons": ["readme.pdf", "glinet.txt"]
+	},
+	"DIR853R1": {
+		"details": "DIR 853 R1",
+		"type": "1",
+		"build": "2203",
+		"config": ".config_dir853r1",
+		"image": "openwrt-ramips-mt7621-dlink_dir-853-r1-squashfs-sysupgrade.bin",
+		"imagepath": "/ramips/mt7621/",
+		"mod": "Dlink-DIR-853-R1",
+		"ext": "-upgrade.bin",
+		"addons": ["readme.pdf", "readmerecovery.txt"]
 	}
 }
