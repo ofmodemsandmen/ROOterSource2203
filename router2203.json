@@ -516,5 +516,16 @@
 		"mod": "Z2101AX",
 		"image": "openwrt-ramips-mt7621-zbliink_zbt-z2101ax-squashfs-sysupgrade.bin",
 		"ext": "-upgrade.bin"
+	},
+	"AR300M16": {
+		"details": "Gl.iNet AR300M-16",
+		"type": "1",
+		"build": "2203",
+		"config": ".config_ar300m16",
+		"image": "openwrt-ath79-generic-glinet_gl-ar300m16-squashfs-sysupgrade.bin",
+		"imagepath": "/ath79/generic/",
+		"mod": "GL-AR300M-16",
+		"ext": "-upgrade.bin",
+		"addons": ["readme.pdf", "glinet.txt"]
 	}
 }
