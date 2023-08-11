@@ -1,0 +1,13 @@
+#!/bin/sh /etc/rc.common
+# Copyright (C) 2013 OpenWrt.org
+
+START=32
+USE_PROCD=1
+
+start_service()
+{
+	i=484
+	echo $i > /sys/class/gpio/export
+	echo "out" > /sys/class/gpio/gpio${i}/direction
+	echo "1" > /sys/class/gpio/gpio${i}/value
+}
