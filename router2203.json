@@ -541,5 +541,15 @@
 				"model": "ZBT Z2105AX"
 			}
 		}
+	},
+	"YOUKUYK1": {
+		"details": "YOUKU YK1",
+		"type": "1",
+		"config": ".config_youkuyk1",
+		"image": "openwrt-ramips-mt7620-youku_yk-l1-squashfs-sysupgrade.bin",
+		"imagepath": "/ramips/mt7620/",
+		"mod": "YOUKU-YK1",
+		"ext": "-upgrade.bin",
+		"addons": ["readme.pdf", "factory.txt"]
 	}
 }
