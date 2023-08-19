@@ -37,11 +37,6 @@
                         gpio-export,output = <1>;
                 };
 
-                wdg {
-                        gpios = <&gpio 13 1>;
-                        gpio-export,name = "wdg";
-                        gpio-export,output = <1>;
-                };
         };
 		
 	keys {
@@ -91,7 +86,7 @@
 	
 	watchdog {
 		compatible = "linux,wdt-gpio";
-		gpios = <&gpio 37 GPIO_ACTIVE_HIGH>;
+		gpios = <&gpio 13 GPIO_ACTIVE_HIGH>;
 		hw_algo = "toggle";
 		/* hw_margin_ms is actually ~120s but driver limits it to 60s */
 		hw_margin_ms = <60000>;
