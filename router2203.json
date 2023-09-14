@@ -551,5 +551,15 @@
 		"mod": "YOUKU-YK1",
 		"ext": "-upgrade.bin",
 		"addons": ["readme.pdf", "factory.txt"]
+	},
+	"E8450": {
+		"details": "Linksys E8450",
+		"type": "1",
+		"build": "2203",
+		"config": ".config_e8450",
+		"image": "openwrt-mediatek-mt7622-linksys_e8450-squashfs-sysupgrade.bin",
+		"imagepath": "/mediatek/mt7622/",
+		"mod": "Linksys-E8450",
+		"ext": "-upgrade.bin"
 	}
 }
