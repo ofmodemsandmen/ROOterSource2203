@@ -561,5 +561,23 @@
 		"imagepath": "/mediatek/mt7622/",
 		"mod": "Linksys-E8450",
 		"ext": "-upgrade.bin"
+	},
+	"M01K21": {
+		"details": "M01K21",
+		"type": "1",
+		"build": "2203",
+		"config": ".config_m01k21",
+		"package": "ext-mk01k21",
+		"image": "openwrt-ramips-mt7621-mesh_mk01k21-squashfs-sysupgrade.bin",
+		"imagepath": "/ramips/mt7621/",
+		"mod": "M01K21",
+		"ext": "-upgrade.bin",
+		"addons": ["uboot.bin", "Flash-MK01K21.pdf", "Factools.exe", "huawen.ttf"],
+		"custom": {
+			"name": {
+				"model": " M01K21"
+			},
+			"files": "/mk01k21base/files/"	
+		}
 	}
 }

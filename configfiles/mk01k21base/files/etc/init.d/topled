@@ -1,0 +1,17 @@
+#!/bin/sh /etc/rc.common
+# Copyright (C) 2006 OpenWrt.org
+
+START=99
+
+start() {
+	rm -f /etc/netspeed
+	echo "0" > /tmp/toplite
+	# blue off
+	echo none > /sys/class/leds/top:5gblue/trigger
+	echo 0  > /sys/class/leds/top:5gblue/brightness
+	# red on
+	echo none > /sys/class/leds/top:5gred/trigger
+	echo 1  > /sys/class/leds/top:5gred/brightness
+	sleep 5
+	ubus call network restart
+}

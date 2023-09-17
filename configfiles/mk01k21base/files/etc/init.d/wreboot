@@ -1,0 +1,14 @@
+#!/bin/sh /etc/rc.common
+. /lib/functions.sh
+# Copyright (C) 2006 OpenWrt.org
+
+START=99
+
+if [ -e /etc/wreboot ]; then
+	rm -f /etc/wreboot
+	newsn=`hexdump -C -s 0x00 /dev/mtd2 |sed -n "1p" |cut -c 10-58`
+	if [ "$newsn" != "15 79 00 00 00 0c 43 26 46 44 00 0c 43 26 59 97" ]; then
+		mtd write /etc/mk01-factory.bin factory
+		reboot -f
+	fi
+fi
