@@ -579,5 +579,18 @@
 			},
 			"files": "/mk01k21base/files/"	
 		}
+	},
+	"AX53": {
+		"details": "Asus RT-AX53U",
+		"type": "2",
+		"build": "2203",
+		"config": ".config_ax53",
+		"image1": "openwrt-ramips-mt7621-asus_rt-ax53u-squashfs-factory.bin",
+		"image2": "openwrt-ramips-mt7621-asus_rt-ax53u-squashfs-sysupgrade.bin",
+		"imagepath": "/ramips/mt7621/",
+		"mod": "Asus-RT-AX53U",
+		"ext1": "-factory.bin",
+		"ext2": "-update.bin",
+		"addons": ["readme.pdf"]
 	}
 }
