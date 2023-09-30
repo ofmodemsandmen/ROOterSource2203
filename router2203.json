@@ -584,7 +584,7 @@
 		"details": "Asus RT-AX53U",
 		"type": "2",
 		"build": "2203",
-		"config": ".config_ax53",
+		"config": ".config_ax53u",
 		"image1": "openwrt-ramips-mt7621-asus_rt-ax53u-squashfs-factory.bin",
 		"image2": "openwrt-ramips-mt7621-asus_rt-ax53u-squashfs-sysupgrade.bin",
 		"imagepath": "/ramips/mt7621/",
