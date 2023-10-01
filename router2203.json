@@ -557,10 +557,10 @@
 		"type": "1",
 		"build": "2203",
 		"config": ".config_e8450",
-		"image": "openwrt-mediatek-mt7622-linksys_e8450-squashfs-sysupgrade.bin",
+		"image": "openwrt-mediatek-mt7622-linksys_e8450-ubi-squashfs-sysupgrade.itb",
 		"imagepath": "/mediatek/mt7622/",
-		"mod": "Linksys-E8450",
-		"ext": "-upgrade.bin"
+		"mod": "Linksys-E8450-UBI",
+		"ext": "-ubi-upgrade.itb"
 	},
 	"M01K21": {
 		"details": "M01K21",
