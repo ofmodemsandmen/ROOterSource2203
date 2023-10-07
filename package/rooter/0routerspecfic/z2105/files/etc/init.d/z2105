@@ -15,7 +15,7 @@ start_service()
 		uci set wireless.radio0.hwmode=11g
 		uci set wireless.radio0.htmode=HT20
 		uci set wireless.radio0.channel=3
-		uci set wireless.radio0.legacy_rates=0
+		uci set wireless.radio0.legacy_rates=1
 		ssid=$(uci -q get wireless.default_radio0.ssid)
 		ssid=$(echo "$ssid" | sed "s/5G/2G/g")
 		uci set wireless.default_radio0.ssid="$ssid"
