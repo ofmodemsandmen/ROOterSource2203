@@ -25,7 +25,7 @@ define Package/ext-mk01k21
 		+ext-command +ext-speedtest +luci-app-guestwifi \
 		+openvpn-easy-rsa +openvpn-openssl \
 		+ext-extra +luci-app-hotspot \
-		+nano +picocom +wpad +wget +qfirehose 
+		+nano +picocom +wpad +wget +qfirehose +ethtool
   TITLE:=ROOter support for MK01K21
   PKGARCH:=all
 endef
