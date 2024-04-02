@@ -556,6 +556,11 @@
 		"imagepath": "/ramips/mt7621/",
 		"mod": "ZBT-WG2107",
 		"ext": "-upgrade.bin",
-		"addons": ["readme.pdf", "readmerecovery.txt"]
+		"addons": ["readme.pdf", "readmerecovery.txt"],
+		"custom": {
+			"name": {
+				"model": "ZBT WG2107"
+			}
+		}
 	}
 }
