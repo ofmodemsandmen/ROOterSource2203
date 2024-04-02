@@ -545,5 +545,17 @@
 		"mod": "ZBT-WG1602-16",
 		"ext": "-upgrade.bin",
 		"addons": ["readme.pdf", "readmerecovery.txt", "usb-configuration.txt"]
+	},
+	"WG2107": {
+		"details": "ZBT WG2107",
+		"type": "1",
+		"build": "2203",
+		"config": ".config_wg2107",
+		"prescript": "/target/linux/ramips/wg1602.sh 16",
+		"image": "openwrt-ramips-mt7621-zbtlink_zbt-wg1602-16m-squashfs-sysupgrade.bin",
+		"imagepath": "/ramips/mt7621/",
+		"mod": "ZBT-WG2107",
+		"ext": "-upgrade.bin",
+		"addons": ["readme.pdf", "readmerecovery.txt"]
 	}
 }
