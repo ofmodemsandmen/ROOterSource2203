@@ -735,7 +735,7 @@ CONFIG_BUSYBOX_DEFAULT_UNIQ=y
 # CONFIG_BUSYBOX_DEFAULT_USLEEP is not set
 # CONFIG_BUSYBOX_DEFAULT_UUDECODE is not set
 # CONFIG_BUSYBOX_DEFAULT_BASE32 is not set
-# CONFIG_BUSYBOX_DEFAULT_BASE64 is not set
+CONFIG_BUSYBOX_DEFAULT_BASE64=y
 # CONFIG_BUSYBOX_DEFAULT_UUENCODE is not set
 CONFIG_BUSYBOX_DEFAULT_WC=y
 # CONFIG_BUSYBOX_DEFAULT_FEATURE_WC_LARGE is not set
@@ -1695,6 +1695,7 @@ CONFIG_PACKAGE_bcm27xx-gpu-fw=y
 # CONFIG_PACKAGE_lttng-tools is not set
 # CONFIG_PACKAGE_m4 is not set
 # CONFIG_PACKAGE_make is not set
+# CONFIG_PACKAGE_mt76-test is not set
 # CONFIG_PACKAGE_objdump is not set
 # CONFIG_PACKAGE_packr is not set
 # CONFIG_PACKAGE_patch is not set
@@ -2047,7 +2048,7 @@ CONFIG_PACKAGE_kmod-fs-vfat=y
 # CONFIG_PACKAGE_kmod-hwmon-adcxx is not set
 # CONFIG_PACKAGE_kmod-hwmon-adt7410 is not set
 # CONFIG_PACKAGE_kmod-hwmon-adt7475 is not set
-# CONFIG_PACKAGE_kmod-hwmon-core is not set
+CONFIG_PACKAGE_kmod-hwmon-core=y
 # CONFIG_PACKAGE_kmod-hwmon-dme1737 is not set
 # CONFIG_PACKAGE_kmod-hwmon-drivetemp is not set
 # CONFIG_PACKAGE_kmod-hwmon-g762 is not set
@@ -4345,6 +4346,7 @@ CONFIG_PACKAGE_luci-mod-system=y
 # CONFIG_PACKAGE_luci-app-dcwapd is not set
 # CONFIG_PACKAGE_luci-app-ddns is not set
 # CONFIG_PACKAGE_luci-app-diag-core is not set
+# CONFIG_PACKAGE_luci-app-diskman is not set
 # CONFIG_PACKAGE_luci-app-dnscrypt-proxy is not set
 # CONFIG_PACKAGE_luci-app-dnsmasq-ipset is not set
 # CONFIG_PACKAGE_luci-app-dockerman is not set
@@ -4381,7 +4383,6 @@ CONFIG_PACKAGE_luci-app-firewall=y
 # CONFIG_PACKAGE_luci-app-olsr-viz is not set
 # CONFIG_PACKAGE_luci-app-omcproxy is not set
 # CONFIG_PACKAGE_luci-app-openvpn is not set
-# CONFIG_PACKAGE_luci-app-openwisp is not set
 CONFIG_PACKAGE_luci-app-opkg=y
 # CONFIG_PACKAGE_luci-app-p910nd is not set
 # CONFIG_PACKAGE_luci-app-pagekitec is not set
@@ -5709,6 +5710,7 @@ CONFIG_PACKAGE_uclient-fetch=y
 # CONFIG_PACKAGE_build-utils is not set
 # CONFIG_PACKAGE_build-wifi is not set
 # CONFIG_PACKAGE_ext-custom-basic is not set
+# CONFIG_PACKAGE_ext-lte is not set
 # end of BuildSections
 
 #
@@ -5720,6 +5722,8 @@ CONFIG_PACKAGE_uclient-fetch=y
 # CONFIG_PACKAGE_ext-custom-level3 is not set
 # CONFIG_PACKAGE_ext-custom-level4 is not set
 # CONFIG_PACKAGE_ext-custom-level5 is not set
+# CONFIG_PACKAGE_ext-custom-multi is not set
+# CONFIG_PACKAGE_ext-custom-multi-openvpn is not set
 # end of CustomBuilds
 
 #
@@ -5745,6 +5749,7 @@ CONFIG_PACKAGE_uclient-fetch=y
 #
 # CONFIG_PACKAGE_mesh-mesh is not set
 # CONFIG_PACKAGE_mesh-wpad is not set
+# CONFIG_PACKAGE_meshs is not set
 # end of Mesh Support
 
 #
@@ -5766,6 +5771,7 @@ CONFIG_PACKAGE_uclient-fetch=y
 # CONFIG_PACKAGE_ext-mosquitto is not set
 # CONFIG_PACKAGE_ext-netselect is not set
 # CONFIG_PACKAGE_ext-openwisp is not set
+# CONFIG_PACKAGE_ext-ota is not set
 # CONFIG_PACKAGE_ext-remote is not set
 # CONFIG_PACKAGE_ext-repeater is not set
 # CONFIG_PACKAGE_ext-rspeedtest is not set
@@ -5777,10 +5783,13 @@ CONFIG_PACKAGE_uclient-fetch=y
 # CONFIG_PACKAGE_ext-speedtest is not set
 # CONFIG_PACKAGE_ext-texting is not set
 # CONFIG_PACKAGE_ext-throttle is not set
+# CONFIG_PACKAGE_ext-ue806 is not set
 # CONFIG_PACKAGE_ext-wireguard is not set
+# CONFIG_PACKAGE_ext-wizard is not set
 # CONFIG_PACKAGE_ext-yamon3 is not set
 # CONFIG_PACKAGE_ext-zerotier is not set
 # CONFIG_PACKAGE_extramenu is not set
+# CONFIG_PACKAGE_luci-app-openwisp is not set
 # CONFIG_PACKAGE_luci-app-vpn-policy-routing is not set
 # CONFIG_PACKAGE_luci-app-vpnbypass is not set
 # CONFIG_PACKAGE_multi-wifi is not set
@@ -5791,6 +5800,7 @@ CONFIG_PACKAGE_uclient-fetch=y
 # CONFIG_PACKAGE_qlog is not set
 # CONFIG_PACKAGE_udp-tunnel is not set
 # CONFIG_PACKAGE_webconsole is not set
+# CONFIG_PACKAGE_world-zerotier is not set
 # end of Optional Applications
 
 #
@@ -5806,12 +5816,15 @@ CONFIG_PACKAGE_uclient-fetch=y
 # CONFIG_PACKAGE_alix2d13 is not set
 # CONFIG_PACKAGE_b1300 is not set
 # CONFIG_PACKAGE_d240 is not set
+# CONFIG_PACKAGE_dir853 is not set
 # CONFIG_PACKAGE_dir860l is not set
+# CONFIG_PACKAGE_ext-omnia is not set
 # CONFIG_PACKAGE_ext-ssh is not set
 CONFIG_PACKAGE_fscheck=y
 # CONFIG_PACKAGE_h721 is not set
+# CONFIG_PACKAGE_h721ax is not set
+# CONFIG_PACKAGE_mesh1608 is not set
 # CONFIG_PACKAGE_mk01k12 is not set
-# CONFIG_PACKAGE_mk01k21 is not set
 # CONFIG_PACKAGE_mofi4500 is not set
 # CONFIG_PACKAGE_mt1300 is not set
 # CONFIG_PACKAGE_rbm11g is not set
@@ -5827,9 +5840,11 @@ CONFIG_PACKAGE_fscheck=y
 # CONFIG_PACKAGE_wg259 is not set
 # CONFIG_PACKAGE_wg3526 is not set
 # CONFIG_PACKAGE_wg827 is not set
+# CONFIG_PACKAGE_wififix is not set
 # CONFIG_PACKAGE_wrt1900 is not set
 # CONFIG_PACKAGE_ws1208v2 is not set
 # CONFIG_PACKAGE_x750 is not set
+# CONFIG_PACKAGE_z2105 is not set
 # end of Router Specific
 
 #
@@ -5837,8 +5852,6 @@ CONFIG_PACKAGE_fscheck=y
 #
 # CONFIG_PACKAGE_ext-splash is not set
 # CONFIG_PACKAGE_ext-splashconfig is not set
-# CONFIG_PACKAGE_splash is not set
-# CONFIG_PACKAGE_status is not set
 # end of Splash Screens
 
 #
@@ -5860,14 +5873,23 @@ CONFIG_PACKAGE_luci-theme-material=y
 # end of Wifi
 
 # CONFIG_PACKAGE_ext-ex is not set
+# CONFIG_PACKAGE_ext-fcc is not set
 # CONFIG_PACKAGE_ext-fccm is not set
 # CONFIG_PACKAGE_ext-huasifei is not set
 # CONFIG_PACKAGE_ext-huasifei16 is not set
+# CONFIG_PACKAGE_ext-indro is not set
+# CONFIG_PACKAGE_ext-lte16 is not set
+# CONFIG_PACKAGE_ext-mesh-master is not set
+# CONFIG_PACKAGE_ext-mesh-master16 is not set
+# CONFIG_PACKAGE_ext-mesh-node is not set
 # CONFIG_PACKAGE_ext-mk01k21 is not set
 # CONFIG_PACKAGE_ext-mk01k2116 is not set
 # CONFIG_PACKAGE_ext-rooter-lite is not set
 # CONFIG_PACKAGE_ext-rooter16 is not set
-# CONFIG_PACKAGE_ext-rooterbcm16 is not set
+# CONFIG_PACKAGE_ext-sky is not set
+# CONFIG_PACKAGE_ext-skyax is not set
+# CONFIG_PACKAGE_ext-testwifi is not set
+# CONFIG_PACKAGE_ext-wifirepeat is not set
 # CONFIG_PACKAGE_ext-world is not set
 # CONFIG_PACKAGE_ext-world16 is not set
 # end of ROOter
