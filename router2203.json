@@ -445,7 +445,7 @@
 		"config": ".config_z2101ax",
 		"imagepath": "/ramips/mt7621/",
 		"mod": "ZBT-Z2101AX",
-		"image": "openwrt-ramips-mt7621-zbliink_zbt-z2101ax-squashfs-sysupgrade.bin",
+		"image": "openwrt-ramips-mt7621-zblink_zbt-z2101ax-squashfs-sysupgrade.bin",
 		"ext": "-upgrade.bin"
 	},
 	"AR300M16": {
@@ -476,7 +476,7 @@
 		"config": ".config_z2105ax",
 		"imagepath": "/ramips/mt7621/",
 		"mod": "ZBT-Z2105AX",
-		"image": "openwrt-ramips-mt7621-zbliink_zbt-z2101ax-squashfs-sysupgrade.bin",
+		"image": "openwrt-ramips-mt7621-zblink_zbt-z2101ax-squashfs-sysupgrade.bin",
 		"ext": "-upgrade.bin",
 		"custom": {
 			"name": {

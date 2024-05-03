@@ -6,7 +6,7 @@
 #include <dt-bindings/input/input.h>
 
 / {
-	compatible = "zbt,z2101ax", "mediatek,mt7621-soc";
+	compatible = "zblink,zbt-z2101ax", "mediatek,mt7621-soc";
 	model = "ZBT-Z2101AX";
 
 	aliases {
