@@ -50,7 +50,7 @@
  
  #define CMOTECH_VENDOR_ID			0x16d8
  #define CMOTECH_PRODUCT_6001			0x6001
-@@ -603,6 +608,51 @@
+@@ -603,6 +608,53 @@
  
  
  static const struct usb_device_id option_ids[] = {
@@ -84,6 +84,8 @@
 +	{ USB_DEVICE_INTERFACE_CLASS(TELIT_VENDOR_ID, 0x1204, 0xff),	/* Telit LE910Cx (MBIM) */
 +	  .driver_info = NCTRL(0) | RSVD(1) },
 +	{ USB_DEVICE(0x413c, 0x81d8),						/* Foxconn T77W968 */
++	.driver_info = RSVD(0) | RSVD(1) | RSVD(6) },
++	{ USB_DEVICE(0x413c, 0x81d9),						/* Foxconn DW5820e */
 +	.driver_info = RSVD(0) | RSVD(1) | RSVD(6) },
 +	{ USB_DEVICE(0x1bc7, 0x1910),						/* Ln960 */
 +	.driver_info = RSVD(0) | RSVD(1) | RSVD(6) },
