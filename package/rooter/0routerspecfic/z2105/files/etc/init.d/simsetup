@@ -1,0 +1,20 @@
+#!/bin/sh /etc/rc.common
+# Copyright (C) 2013 OpenWrt.org
+ 
+START=88
+USE_PROCD=1
+
+log() {
+	logger -t "usb-modeswitch" "$@"
+}
+
+start_service()
+{
+	simn=$(uci -q get modem.general.simnum)
+	if [ -z "$simn" ]; then
+		simn="0"
+		uci set modem.general.simnum="0"
+		uci commit modem
+	fi
+	echo "$simn" > /sys/class/gpio/sim/value
+}
