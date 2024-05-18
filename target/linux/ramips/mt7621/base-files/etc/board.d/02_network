@@ -45,6 +45,7 @@ ramips_setup_interfaces()
 		ucidef_set_interfaces_lan_wan "lan" "wan"
 		;;
 	beeline,smartbox-giga|\
+	mesh,mk12k21|\
 	mesh,mk01k21)
 		ucidef_set_interfaces_lan_wan "lan1 lan2" "wan"
 		;;

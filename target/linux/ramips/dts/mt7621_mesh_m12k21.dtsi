@@ -1,0 +1,210 @@
+// SPDX-License-Identifier: BSD-3-Clause
+/*
+ *  Copyright(c) 2017 Kristian Evensen <kristian.evensen@gmail.com>.
+ *  Copyright(c) 2017 Piotr Dymacz <pepe2k@gmail.com>.
+ *  All rights reserved.
+ */
+
+#include "mt7621.dtsi"
+
+#include <dt-bindings/gpio/gpio.h>
+#include <dt-bindings/input/input.h>
+
+/ {
+	compatible = "mesh,m12k21", "mediatek,mt7621-soc";
+
+	aliases {
+		led-boot = &led_status;
+		led-failsafe = &led_status;
+		led-running = &led_status;
+		led-upgrade = &led_status;
+	};
+
+	chosen {
+		bootargs = "console=ttyS0,115200";
+	};
+
+	leds {
+		compatible = "gpio-leds";
+
+		wifi {
+			linux,default-trigger = "none";
+			label = "blue:wifi";
+			default-state = "off";
+			gpios = <&gpio 0 GPIO_ACTIVE_LOW>;
+		};
+
+		rfled1 {
+			linux,default-trigger = "none";
+			gpios = <&gpio 13 GPIO_ACTIVE_LOW>;
+			label = "blue:rfled1";
+			default-state = "off";
+		};
+
+		rfled2 {
+			linux,default-trigger = "none";
+			gpios = <&gpio 11 GPIO_ACTIVE_LOW>;
+			label = "blue:rfled2";
+			default-state = "off";
+		};
+
+		rfled3 {
+			linux,default-trigger = "none";
+			gpios = <&gpio 17 GPIO_ACTIVE_LOW>;
+			label = "blue:rfled3";
+			default-state = "off";
+		};
+
+		rfled0 {
+			linux,default-trigger = "none";
+			gpios = <&gpio 9 GPIO_ACTIVE_LOW>;
+			label = "blue:rfled0";
+			default-state = "off";
+		};
+
+		sim {
+			linux,default-trigger = "none";
+			gpios = <&gpio 14 GPIO_ACTIVE_LOW>;
+			label = "blue:sim";
+			default-state = "off";
+		};
+		
+		led_status: status {
+			label = "blue:status";
+			gpios = <&gpio 15 GPIO_ACTIVE_LOW>;
+		};
+	};
+
+	keys {
+		compatible = "gpio-keys";
+
+		reset {
+			label = "reset";
+			gpios = <&gpio 18 GPIO_ACTIVE_LOW>;
+			linux,code = <KEY_RESTART>;
+		};
+
+		wps {
+			label = "wps";
+			gpios = <&gpio 10 GPIO_ACTIVE_LOW>;
+			linux,code = <BTN_1>;
+		};
+
+		rfkill {
+			label = "rfkill";
+			gpios = <&gpio 12 GPIO_ACTIVE_LOW>;
+			linux,code = <BTN_0>;
+		};
+	};
+
+	gpio-export {
+		compatible = "gpio-export";
+		
+		5greset {
+			gpio-export,name = "5greset";
+			gpio-export,output = <0x00>;
+			gpios = <&gpio 8 GPIO_ACTIVE_LOW>;
+		};
+
+		5gpower {
+			gpio-export,name = "5gpower";
+			gpio-export,output = <0x00>;
+			gpios = <&gpio 16 GPIO_ACTIVE_LOW>;
+		};
+
+		5gfly {
+			gpio-export,name = "5gfly";
+			gpio-export,output = <0x00>;
+			gpios = <&gpio 7 GPIO_ACTIVE_LOW>;
+		};
+	};
+
+};
+
+&i2c {
+	status = "okay";
+};
+
+&sdhci {
+	status = "okay";
+};
+
+&spi0 {
+	status = "okay";
+
+	flash@0 {
+		compatible = "jedec,spi-nor";
+		reg = <0>;
+		spi-max-frequency = <10000000>;
+
+		partitions {
+			compatible = "fixed-partitions";
+			#address-cells = <1>;
+			#size-cells = <1>;
+			
+			factory: partition@40000 {
+				label = "factory";
+				reg = <0x40000 0x10000>;
+			};
+			
+			partition@ff0000 {
+				label = "reserve";
+				reg = <0xff0000 0x10000>;
+				read-only;
+			};
+			
+			partition@30000 {
+				label = "kpanic";
+				reg = <0x30000 0x10000>;
+			};
+			
+			firmware: partition@50000 {
+				compatible = "denx,uimage";
+				label = "firmware";
+			};
+			
+			partition@fe0000 {
+				label = "ledeinfo";
+				reg = <0xfe0000 0x10000>;
+				read-only;
+			};
+				
+			partition@0 {
+				label = "u-boot";
+				reg = <0x0 0x30000>;
+				read-only;
+			};
+		};
+	};
+};
+
+&pcie {
+	status = "okay";
+};
+
+&pcie0 {
+	wifi0: wifi@0,0 {
+		compatible = "mediatek,mt76";
+		mtd-mac-address = <&factory 0x0a00>;
+	};
+};
+
+&gmac0 {
+	mtd-mac-address = <&factory 0x0a00>;
+};
+
+&switch0 {
+	ports {
+		port@0 {
+			status = "okay";
+			label = "lan1";
+		};
+	};
+};
+
+&state_default {
+	gpio {
+		groups = "wdt", "jtag", "uart3", "uart1", "uart2";
+		function = "gpio";
+	};
+};

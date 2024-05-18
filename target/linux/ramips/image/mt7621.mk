@@ -2503,3 +2503,18 @@ define Device/x721
   SUPPORTED_DEVICES += x721 huasifei,x721
 endef
 TARGET_DEVICES += x721
+
+
+define Device/mesh_m12k21
+  $(Device/dsa-migration)
+  $(Device/uimage-lzma-loader)
+  IMAGE_SIZE := 16064k
+  DEVICE_VENDOR := Mesh
+  DEVICE_MODEL := M12K21
+  DEVICE_VARIANT := 16M
+  DEVICE_PACKAGES := kmod-ata-ahci kmod-sdhci-mt7620 kmod-usb3 \
+		kmod-usb-ledtrig-usbport \
+		kmod-mt7915e kmod-mt76 -wpad-basic-wolfssl
+  SUPPORTED_DEVICES += m12k21 mesh,m12k21
+endef
+TARGET_DEVICES += mesh_m12k21

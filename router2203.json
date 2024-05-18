@@ -548,5 +548,21 @@
 				"model": "ZBT WG2107"
 			}
 		}
+	},
+	"M12K21": {
+		"details": "M12K21",
+		"type": "1",
+		"build": "2203",
+		"config": ".config_m12k21",
+		"package": "ext-mk01k21",
+		"image": "openwrt-ramips-mt7621-mesh_m12k21-squashfs-sysupgrade.bin",
+		"imagepath": "/ramips/mt7621/",
+		"mod": "Suncomm-Model-O3",
+		"ext": "-upgrade.bin",
+		"custom": {
+			"name": {
+				"model": "Suncomm Model O3"
+			}
+		}
 	}
 }
