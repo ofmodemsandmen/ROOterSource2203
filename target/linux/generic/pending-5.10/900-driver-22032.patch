@@ -1,6 +1,6 @@
 --- a/drivers/net/usb/qmi_wwan.c
 +++ b/drivers/net/usb/qmi_wwan.c
-@@ -1060,6 +1060,27 @@
+@@ -1060,6 +1060,28 @@
  	{QMI_FIXED_INTF(0x05c6, 0x9021, 1)},
  	{QMI_FIXED_INTF(0x05c6, 0x9022, 2)},
  	{QMI_QUIRK_SET_DTR(0x05c6, 0x9025, 4)},	/* Alcatel-sbell ASB TL131 TDD LTE (China Mobile) */
@@ -25,6 +25,7 @@
 +	{QMI_MATCH_FF_FF_FF(0x2c7c, 0x0801)},	/* Quectel RM520 */
 +	{QMI_MATCH_FF_FF_FF(0x2c7c, 0x6005)},	/* Quectel EC200A */
 +	{QMI_MATCH_FF_FF_FF(0x2c7c, 0x0307)},	/* Quectel EM12 */
++	{QMI_MATCH_FF_FF_FF(0x2c7c, 0x0122)},	/* Quectel RM550 */
  	{QMI_FIXED_INTF(0x05c6, 0x9026, 3)},
  	{QMI_FIXED_INTF(0x05c6, 0x902e, 5)},
  	{QMI_FIXED_INTF(0x05c6, 0x9031, 5)},
@@ -50,10 +51,15 @@
  
  #define CMOTECH_VENDOR_ID			0x16d8
  #define CMOTECH_PRODUCT_6001			0x6001
-@@ -603,6 +608,53 @@
+@@ -603,6 +608,58 @@
  
  
  static const struct usb_device_id option_ids[] = {
+ +	{ USB_DEVICE_AND_INTERFACE_INFO(QUECTEL_VENDOR_ID, 0x0122, 0xff, 0xff, 0x30)},
++ 	{ USB_DEVICE_AND_INTERFACE_INFO(QUECTEL_VENDOR_ID, 0x0122, 0xff, 0x00, 0x40) },
++ 	{ USB_DEVICE_AND_INTERFACE_INFO(QUECTEL_VENDOR_ID, 0x0122, 0xff, 0, 0)},
++	{ USB_DEVICE_AND_INTERFACE_INFO(QUECTEL_VENDOR_ID, 0x0122, 0xff, 0xff, 0xff),
++ 	  .driver_info = RSVD(1) | RSVD(2) | RSVD(3) | RSVD(4) | NUMEP2 },
 +	{ USB_DEVICE(MEIG_VENDOR_ID, MEIG_PRODUCT_f601) },
 +	{ USB_DEVICE(MEIG_VENDOR_ID, MEIG_PRODUCT_9025) },
 +	{ USB_DEVICE(0x03f0, 0x0e57)},
