@@ -564,5 +564,20 @@
 				"model": "Suncomm Model O3"
 			}
 		}
+	},
+	"Z2105AX": {
+		"details": "ZBT Z2105AX",
+		"type": "1",
+		"config": ".config_z2105ax",
+		"package": "ext-smart",
+		"imagepath": "/ramips/mt7621/",
+		"mod": "ZBT-Z2105AX",
+		"image": "openwrt-ramips-mt7621-zblink_zbt-z2101ax-squashfs-sysupgrade.bin",
+		"ext": "-upgrade.bin",
+		"custom": {
+			"name": {
+				"model": "ZBT Z2105AX"
+			}
+		}
 	}
 }
