@@ -105,28 +105,6 @@
 			"files": "/hc952/files/"
 		}
 	},
-	"WG1608-16": {
-		"details": "ZBT WG1608-16",
-		"type": "1",
-		"build": "2203",
-		"config": ".config_wg1608",
-		"image": "openwrt-ramips-mt7621-zbtlink_zbt-wg1608-16m-squashfs-sysupgrade.bin",
-		"imagepath": "/ramips/mt7621/",
-		"mod": "ZBT-WG1608-16",
-		"ext": "-upgrade.bin",
-		"addons": ["readme.pdf", "readmerecovery.txt"]
-	},
-	"WG1608-32": {
-		"details": "ZBT WG1608-32M",
-		"type": "1",
-		"build": "2102",
-		"config": ".config_wg1608-32",
-		"image": "openwrt-ramips-mt7621-zbtlink_zbt-wg1608-32m-squashfs-sysupgrade.bin",
-		"imagepath": "/ramips/mt7621/",
-		"mod": "ZBT-WG1608-32M",
-		"ext": "-upgrade.bin",
-		"addons": ["readme.pdf", "readmerecovery.txt"]
-	},
 	"WRT1900AC": {
 		"details": "Linksys WRT1900AC-V1",
 		"type": "2",
