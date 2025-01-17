@@ -1,5 +1,8 @@
 #!/bin/sh
 
+#core="-j7" 
+core=""
+ 
 DATE=$(date +%Y-%m-%d)
 routersjson="./router2203.json"
 templatefolder="template/"
@@ -36,7 +39,7 @@ buldimage() {
 						temp="${temp1%\"}"
 						model_ext="${temp#\"}"
 					;;
-					"2" )
+					"2"|"6" )
 						temp1=$(jshon -e "$model_up" -e image1  < $routersjson)
 						temp="${temp1%\"}"
 						model_image1="${temp#\"}"
@@ -508,7 +511,7 @@ buldimage() {
 			fi
 			make defconfig
 			configfix
-			make V=s
+			make $core V=s
 			cp ./bin/targets$model_imagepath$model_image ./images/$model_mod$END$model_ext
 			EX=$?
 			if [ $EX -ne 0 ]; then
@@ -528,7 +531,7 @@ buldimage() {
 						sed -i -e 's/# CONFIG_PACKAGE_ext-rooter16 is not set/CONFIG_PACKAGE_ext-rooter16=y/g' ./.config
 						make defconfig
 						configfix
-						make V=s
+						make $core V=s
 						cp ./bin/targets$model_imagepath$model_image ./images/$model_mod"-MWAN3"$END$model_ext
 						EX=$?
 						if [ $EX -ne 0 ]; then
@@ -550,7 +553,7 @@ buldimage() {
 						sed -i -e "s/# CONFIG_PACKAGE_$model_build16 is not set/CONFIG_PACKAGE_$model_build16=y/g" ./.config
 						make defconfig
 						configfix
-						make V=s
+						make $core V=s
 						cp ./bin/targets$model_imagepath$model_image ./images/$model_mod"-MWAN3"$END$model_ext
 						EX=$?
 						if [ $EX -ne 0 ]; then
@@ -580,7 +583,7 @@ buldimage() {
 			fi
 			make defconfig
 			configfix
-			make V=s
+			make $core V=s
 			cp ./bin/targets$model_imagepath$model_image1 ./images/$model_mod$END$model_ext1
 			EX=$?
 			if [ $EX -ne 0 ]; then
@@ -607,7 +610,7 @@ buldimage() {
 						sed -i -e 's/# CONFIG_PACKAGE_ext-rooter16 is not set/CONFIG_PACKAGE_ext-rooter16=y/g' ./.config
 						make defconfig
 						configfix
-						make V=s
+						make $core V=s
 						cp ./bin/targets$model_imagepath$model_image1 ./images/$model_mod"-MWAN3"$END$model_ext1
 						EX=$?
 						if [ $EX -ne 0 ]; then
@@ -636,7 +639,7 @@ buldimage() {
 						sed -i -e "s/# CONFIG_PACKAGE_$model_build16 is not set/CONFIG_PACKAGE_$model_build16=y/g" ./.config
 						make defconfig
 						configfix
-						make V=s
+						make $core V=s
 						cp ./bin/targets$model_imagepath$model_image1 ./images/$model_mod"-MWAN3"$END$model_ext1
 						EX=$?
 						if [ $EX -ne 0 ]; then
@@ -673,7 +676,7 @@ buldimage() {
 			fi
 			make defconfig
 			configfix
-			make V=s
+			make $core V=s
 			cp ./bin/targets$model_imagepath$model_image1 ./images/$model_image1
 			EX=$?
 			if [ $EX -ne 0 ]; then
@@ -704,7 +707,7 @@ buldimage() {
 						sed -i -e 's/# CONFIG_PACKAGE_ext-rooter16 is not set/CONFIG_PACKAGE_ext-rooter16=y/g' ./.config
 						make defconfig
 						configfix
-						make V=s
+						make $core V=s
 						cp ./bin/targets$model_imagepath$model_image1 ./images/$model_image1
 						EX=$?
 						if [ $EX -ne 0 ]; then
@@ -737,7 +740,7 @@ buldimage() {
 						sed -i -e "s/# CONFIG_PACKAGE_$model_build16 is not set/CONFIG_PACKAGE_$model_build16=y/g" ./.config
 						make defconfig
 						configfix
-						make V=s
+						make $core V=s
 						cp ./bin/targets$model_imagepath$model_image1 ./images/$model_image1
 						EX=$?
 						if [ $EX -ne 0 ]; then
@@ -778,7 +781,7 @@ buldimage() {
 			fi
 			make defconfig
 			configfix
-			make V=s
+			make $core V=s
 			cp ./bin/targets$model_imagepath$model_image1 ./images/$model_image1
 			EX=$?
 			if [ $EX -ne 0 ]; then
@@ -801,7 +804,7 @@ buldimage() {
 						sed -i -e 's/# CONFIG_PACKAGE_ext-rooter16 is not set/CONFIG_PACKAGE_ext-rooter16=y/g' ./.config
 						make defconfig
 						configfix
-						make V=s
+						make $core V=s
 						cp ./bin/targets$model_imagepath$model_image1 ./images/$model_image1
 						EX=$?
 						if [ $EX -ne 0 ]; then
@@ -826,7 +829,7 @@ buldimage() {
 						sed -i -e "s/# CONFIG_PACKAGE_$model_build16 is not set/CONFIG_PACKAGE_$model_build16=y/g" ./.config
 						make defconfig
 						configfix
-						make V=s
+						make $core V=s
 						cp ./bin/targets$model_imagepath$model_image1 ./images/$model_image1
 						EX=$?
 						if [ $EX -ne 0 ]; then
@@ -863,7 +866,7 @@ buldimage() {
 			# full build both EFI and non
 			make defconfig
 			configfix
-			make V=s
+			make $core V=s
 			cp ./bin/targets$model_imagepath$model_image1 ./images/$model_image1
 						# also do the EFI rootfs, kernel, etc
 						cp ./bin/targets$model_imagepath$model_image3 ./images/$model_image3
@@ -896,6 +899,34 @@ buldimage() {
 			#
 			del_addons
 			cd ..
+		;;
+		"6" )
+			./buildz8 z8102
+			./buildz8 z8102v2
+			model_1=$model_image1"-GO"$DATE".zip"
+			model_2=$model_image2"-GO"$DATE".zip"
+			model_mod=$model_mod"-GO"$DATE".zip"
+
+			cd ./images
+			mkdir $model_image1
+			mkdir $model_image2
+
+			unzip $model_1 -d $model_image1
+			unzip $model_2 -d $model_image2
+
+			L1="Flash8102.txt"
+			L2="SerialRecovery.zip"
+			cp "../configfiles/addons/$L1" $L1
+			cp "../configfiles/addons/$L2" $L2
+
+			zip -r $model_mod $model_image1 $model_image2 $L1 $L2
+
+			rm -rf $model_image1
+			rm -rf $model_image2
+			rm $L1
+			rm $L2
+			rm $model_1
+			rm $model_2
 		;;
 	esac
 }
@@ -958,4 +989,6 @@ else
 		fi
 	fi
 fi
+
+
 
