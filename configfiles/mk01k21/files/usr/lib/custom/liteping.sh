@@ -9,13 +9,11 @@ log() {
 	logger -t "Top Lite Ping Test " "$@"
 }
 
-
+CURRMODEM=1
 while [ true ]
 do
-	RETURN_CODE_1=$(curl -m 10 -s -o /dev/null -w "%{http_code}" http://www.google.com/)
-	RETURN_CODE_2=$(curl -m 10 -s -o /dev/null -w "%{http_code}" http://www.example.org/)
-	RETURN_CODE_3=$(curl -m 10 -s -o /dev/null -w "%{http_code}" https://github.com)
-	if [[ "$RETURN_CODE_1" != "200" &&  "$RETURN_CODE_2" != "200" &&  "$RETURN_CODE_3" != "200" ]]; then
+	conn=$(uci -q get modem.modem$CURRMODEM.connected)
+	if [ "$conn" = "0" ]; then
 		rm -f /tmp/liteping
 		if [ -e /tmp/toplite ]; then
 			# blue off
