@@ -109,6 +109,9 @@ tplink,tl-wr841n-v14)
 	ucidef_set_led_switch "wan" "wan" "green:wan" "switch0" "0x01"
 	ucidef_set_led_wlan "wifi_led" "wifi" "green:wlan" "phy0tpt"
 	;;
+tplink,tl-wr902ac-v4)
+	ucidef_set_led_switch "wan" "wan" "green:wan" "switch0" "0x10"
+	;;
 tplink,tl-wr902ac-v3)
 	ucidef_set_led_wlan "wlan2g" "wlan2g" "green:wlan" "phy0tpt"
 	ucidef_set_led_switch "lan" "lan" "green:lan" "switch0" "0x10"
