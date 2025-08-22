@@ -19,7 +19,7 @@ define Package/ext-mk01k21
 		+luci-app-rootervpn +ext-wireguard \
 		+ext-theme +luci-theme-argon +luci-theme-argondark +ext-login \
 		+luci-theme-tomato +luci-theme-material \
-		+webconsole +bwmon +464xlat \
+		+webconsole +bwmon +464xlat +ext-zerotier \
 		+ca-bundle +ca-certificates +libustream-wolfssl \
 		+kmod-sched-cake +luci-app-nft-qos \
 		+ext-command +ext-speedtest +luci-app-guestwifi \
