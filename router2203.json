@@ -397,7 +397,7 @@
 		"type": "1",
 		"build": "2203",
 		"config": ".config_ar300m",
-		"image": "openwrt-ath79-generic-glinet_gl-ar300m-nand-squashfs-sysupgrade.bin",
+		"image": "openwrt-ath79-nand-glinet_gl-ar300m-nand-squashfs-sysupgrade.bin",
 		"imagepath": "/ath79/nand/",
 		"mod": "GL-AR300M-nand",
 		"ext": "-upgrade.bin",
