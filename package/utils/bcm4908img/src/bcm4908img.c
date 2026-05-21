@@ -771,6 +771,10 @@ static int bcm4908img_bootfs_ls(FILE *fp, struct bcm4908img_info *info) {
 			continue;
 		}
 
+		if (sizeof(node) > sizeof(dirent)) {
+			fprintf(stderr, "Node size exceeds dirent size\n");
+			return -EIO;
+		}
 		memcpy(&dirent, &node, sizeof(node));
 		bytes += fread((uint8_t *)&dirent + sizeof(node), 1, sizeof(dirent) - sizeof(node), fp);
 		if (bytes != sizeof(dirent)) {
